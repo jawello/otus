@@ -21,6 +21,6 @@ jobs:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKERFILE: "Dockerfile"
-          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME
+          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/${{ IMAGE_NAME }}
           TAG_NAME: "0.0.1" #[[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           LATEST: "true"
