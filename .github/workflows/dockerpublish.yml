@@ -5,6 +5,7 @@ on: push
 #      - v*
 env:
   IMAGE_NAME: otus_docker
+  $TAG_NAME_: [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -13,7 +14,6 @@ jobs:
         uses: actions/checkout@v1
         with:
           fetch-depth: 1
-
       - name: Docker Build & Push to Docker Hub
         uses: opspresso/action-docker@master
         with:
@@ -22,6 +22,6 @@ jobs:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKERFILE: "Dockerfile"
-          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/"$IMAGE_NAME"
-          # TAG_NAME: [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}
+          TAG_NAME: ${TAG_NAME_}
           LATEST: "true"
