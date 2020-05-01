@@ -1,14 +1,19 @@
 name: Docker Push
-on: push
+on:
+  push:
+    tags:
+      - v*
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#*v}
       - name: Checkout
         uses: actions/checkout@v1
         with:
           fetch-depth: 1
-
       - name: Docker Build & Push to Docker Hub
         uses: opspresso/action-docker@master
         with:
@@ -17,6 +22,6 @@ jobs:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKERFILE: "Dockerfile"
-          IMAGE_NAME: "USERNAME/IMAGE_NAME"
-          TAG_NAME: "v0.0.1"
+          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus_docker
+          TAG_NAME: ${{ steps.get_version.outputs.VERSION }}
           LATEST: "true"
