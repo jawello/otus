@@ -7,8 +7,15 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Get Tag Name
-        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+      - name: Extract tag name
+          id: tag
+          uses: actions/github-script@0.2.0
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: |
+              return context.payload.ref.replace(/\/refs\/tags\//, '');
+      - name: Echo
+        run: echo ${{ steps.tag.outputs.result }}
       - name: Checkout
         uses: actions/checkout@v1
         with:
@@ -22,5 +29,5 @@ jobs:
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKERFILE: "Dockerfile"
           IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus_docker
-          TAG_NAME: ${{ steps.get_version.outputs.VERSION }}
+          TAG_NAME: ${{ steps.tag.outputs.result }}
           LATEST: "true"
