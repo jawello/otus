@@ -8,10 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get Tag Name
-        run: |
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          echo VERSION=$VERSION
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
       - name: Checkout
         uses: actions/checkout@v1
         with:
@@ -25,5 +22,5 @@ jobs:
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKERFILE: "Dockerfile"
           IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus_docker
-          TAG_NAME: ${{ github.ref##*/ }}
+          TAG_NAME: ${{ steps.get_version.outputs.VERSION }}
           LATEST: "true"
