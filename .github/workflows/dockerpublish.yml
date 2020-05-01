@@ -1,7 +1,8 @@
 name: Docker Push
-on: push
-  tags:
-    - v*
+on:
+  push:
+    tags:
+      - v*
 jobs:
   docker:
     runs-on: ubuntu-latest
