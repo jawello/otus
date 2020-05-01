@@ -7,7 +7,11 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ github.ref##*/ }}
+      - name: Get Tag Name
+        run: |
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          echo VERSION=$VERSION
       - name: Checkout
         uses: actions/checkout@v1
         with:
