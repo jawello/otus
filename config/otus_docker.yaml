@@ -1,0 +1,3 @@
+app:
+  loglevel: DEBUG
+  port: 8000
