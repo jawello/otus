@@ -7,6 +7,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - run: echo ${{ github.ref##*/ }}
       - name: Checkout
         uses: actions/checkout@v1
         with:
@@ -19,6 +20,6 @@ jobs:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKERFILE: "Dockerfile"
-          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}
-          TAG_NAME: ${GITHUB_REF##*/}
+          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus_docker
+          TAG_NAME: ${{ github.ref##*/ }}
           LATEST: "true"
