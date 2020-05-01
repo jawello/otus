@@ -5,7 +5,7 @@ on: push
 #      - v*
 env:
   IMAGE_NAME: otus_docker
-  $TAG_NAME_: [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+  TAG_NAME_: [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 jobs:
   docker:
     runs-on: ubuntu-latest
