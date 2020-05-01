@@ -1,5 +1,9 @@
 name: Docker Push
 on: push
+#  tags:
+#    - v*
+env:
+  IMAGE_NAME: otus_docker
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -17,6 +21,6 @@ jobs:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKERFILE: "Dockerfile"
-          IMAGE_NAME: "USERNAME/IMAGE_NAME"
-          TAG_NAME: "v0.0.1"
+          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME
+          TAG_NAME: "0.0.1" #[[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           LATEST: "true"
