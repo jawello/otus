@@ -16,6 +16,6 @@ Cобрать локально образ приложения в докер.
 
 На выходе необходимо предоставить
 1) имя репозитория и тэг на Dockerhub
-[jawello/otus:0.0.1](https://hub.docker.com/repository/docker/jawello/otus_docker)
+[jawello/otus:0.0.1](https://hub.docker.com/repository/docker/jawello/otus)
 2) ссылку на github c Dockerfile, либо приложить Dockerfile в ДЗ
 
