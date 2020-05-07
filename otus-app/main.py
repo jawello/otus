@@ -36,11 +36,16 @@ async def health_get(request) -> Response:
 
 
 def main(config_path):
-    config = load_config(config_path)
-    logging.basicConfig(level=logging.DEBUG)
-    app = init_app(config)
-    app_config = config.get('app', None)
-    if not app_config:
+    if not config_path:
+        app = web.Application()
+        app_config = None
+    else:
+        config = load_config(config_path)
+        logging.basicConfig(level=logging.DEBUG)
+        app = init_app(config)
+        app_config = config.get('app', None)
+
+    if app_config:
         web.run_app(app, port=app_config.get('port', 8000))
     else:
         web.run_app(app, port=8000)
@@ -53,7 +58,5 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--config", help="Provide path to config file")
     args = parser.parse_args()
 
-    if args.config:
-        main(args.config)
-    else:
-        parser.print_help()
+    main(args.config)
+
