@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otus-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: otus-app
+  template:
+    metadata:
+      labels:
+        app: otus-app
+    spec:
+      containers:
+        - name: otus
+          image: jawello/otus:0.0.2
+          ports:
+            - name: web
+              containerPort: 8000
