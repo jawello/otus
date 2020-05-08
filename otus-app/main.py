@@ -38,6 +38,7 @@ async def health_get(request) -> Response:
 def main(config_path):
     if not config_path:
         app = web.Application()
+        app.add_routes(routes)
         app_config = None
     else:
         config = load_config(config_path)
