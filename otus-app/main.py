@@ -1,4 +1,5 @@
 import yaml
+import socket
 from aiohttp import web
 from aiohttp.web import Application, HTTPInternalServerError
 from aiohttp.web_response import Response
@@ -32,6 +33,15 @@ async def health_get(request) -> Response:
         return Response(body=json.dumps({"status": "OK"}), headers={'content-type': 'application/json'})
     except Exception as ex:
         log.warning(f"Endpoint: health, Method: get. Error:{str(ex)}")
+        return HTTPInternalServerError()
+
+
+@routes.get("/")
+def index(request):
+    try:
+        return Response(body=json.dumps({"host": socket.gethostname()}), headers={'content-type': 'application/json'})
+    except Exception as ex:
+        log.warning(f"Endpoint: /, Method: get. Error:{str(ex)}")
         return HTTPInternalServerError()
 
 
