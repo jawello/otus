@@ -8,8 +8,7 @@ RUN pip install --user -r requirements.txt
 FROM python:3.7-alpine
 COPY --from=builder /root/.local /root/.local
 COPY main.py /app/main.py
-VOLUME ["/config"]
 WORKDIR /app
 EXPOSE 8000
-ENTRYPOINT ["python", "main.py", "-c", "/config/otus_docker.yaml"]
+ENTRYPOINT ["python", "main.py"]
 

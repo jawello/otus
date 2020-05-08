@@ -1,4 +1,5 @@
 import yaml
+import socket
 from aiohttp import web
 from aiohttp.web import Application, HTTPInternalServerError
 from aiohttp.web_response import Response
@@ -35,12 +36,27 @@ async def health_get(request) -> Response:
         return HTTPInternalServerError()
 
 
+@routes.get("/")
+def index(request):
+    try:
+        return Response(body=json.dumps({"host": socket.gethostname()}), headers={'content-type': 'application/json'})
+    except Exception as ex:
+        log.warning(f"Endpoint: /, Method: get. Error:{str(ex)}")
+        return HTTPInternalServerError()
+
+
 def main(config_path):
-    config = load_config(config_path)
-    logging.basicConfig(level=logging.DEBUG)
-    app = init_app(config)
-    app_config = config.get('app', None)
-    if not app_config:
+    if not config_path:
+        app = web.Application()
+        app.add_routes(routes)
+        app_config = None
+    else:
+        config = load_config(config_path)
+        logging.basicConfig(level=logging.DEBUG)
+        app = init_app(config)
+        app_config = config.get('app', None)
+
+    if app_config:
         web.run_app(app, port=app_config.get('port', 8000))
     else:
         web.run_app(app, port=8000)
@@ -53,7 +69,5 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--config", help="Provide path to config file")
     args = parser.parse_args()
 
-    if args.config:
-        main(args.config)
-    else:
-        parser.print_help()
+    main(args.config)
+
