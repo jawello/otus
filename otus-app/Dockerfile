@@ -1,5 +1,5 @@
 FROM python:3.7-alpine as builder
-COPY requirements.txt .
+COPY otus-app/requirements.txt .
 RUN apk update \
   && apk add --virtual build-deps autoconf automake g++ make build-deps gcc python3-dev musl-dev
 RUN pip install --upgrade pip
