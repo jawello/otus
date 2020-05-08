@@ -16,6 +16,7 @@ jobs:
           fetch-depth: 1
       - name: Docker Build & Push to Docker Hub
         uses: opspresso/action-docker@master
+        working-directory: otus-app
         with:
           args: --docker
         env:
