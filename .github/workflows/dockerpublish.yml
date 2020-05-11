@@ -19,9 +19,9 @@ jobs:
         with:
           args: --docker
         env:
+          DOCKERFILE: "otus-app/Dockerfile"
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKERFILE: "Dockerfile"
           IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus
           TAG_NAME: ${{ steps.get_version.outputs.VERSION }}
           LATEST: "true"
