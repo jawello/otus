@@ -7,13 +7,11 @@ services:
     networks:
       - app
     environment:
-      - POSTGRES_PASSWORD=skytrack
+      - POSTGRES_PASSWORD=otus
     restart: on-failure
-    logging:
-      driver: none
   init_db:
     build:
-      context: alembic
+      context: init_db
     volumes:
       - ${PWD}/config/alembic.ini:/migration/alembic.ini
     networks:

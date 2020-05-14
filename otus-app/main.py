@@ -9,6 +9,7 @@ from models import Users
 from models.schemas.users_schema import UsersSchema
 
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy import create_engine
 
 import logging
 
@@ -16,15 +17,36 @@ log = logging.getLogger(__name__)
 routes = web.RouteTableDef()
 
 
+async def init_db(app):
+    dsn = construct_db_url(app['config']['database'])
+    pool = create_engine(dsn, pool_size=20, max_overflow=0)
+    app['db_pool'] = pool
+    return pool
+
+
+def construct_db_url(config):
+    dsn = "postgresql://{user}:{password}@{host}:{port}/{database}"
+    return dsn.format(
+        user=config['DB_USER'],
+        password=config['DB_PASS'],
+        database=config['DB_NAME'],
+        host=config['DB_HOST'],
+        port=config['DB_PORT'],
+    )
+
 async def init_app(config) -> Application:
     app = web.Application()
     app['config'] = config
     app.add_routes(routes)
+    db_pool = await init_db(app)
+    app['db_pool'] = db_pool
     log.debug(app['config'])
     return app
 
 
 def load_config(config_file):
+    import os
+    print(os.getcwd())
     with open(config_file, 'r') as stream:
         try:
             return yaml.safe_load(stream)
