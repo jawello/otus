@@ -1,7 +1,7 @@
 import yaml
 import socket
 from aiohttp import web
-from aiohttp.web import Application, Request, HTTPNoContent, HTTPNotFound, HTTPInternalServerError, HTTPBadRequest
+from aiohttp.web import Application, Request, HTTPNoContent, HTTPNotFound, HTTPInternalServerError, HTTPBadRequest, HTTPConflict
 from aiohttp.web_response import Response
 import json
 
@@ -34,6 +34,7 @@ def construct_db_url(config):
         port=config['DB_PORT'],
     )
 
+
 async def init_app(config) -> Application:
     app = web.Application()
     app['config'] = config
@@ -55,7 +56,7 @@ def load_config(config_file):
 
 
 @routes.get("/health")
-async def health_get(request) -> Response:
+async def health_get(request: Request) -> Response:
     try:
         return Response(body=json.dumps({"status": "OK"}), headers={'content-type': 'application/json'})
     except Exception as ex:
@@ -64,7 +65,7 @@ async def health_get(request) -> Response:
 
 
 @routes.get("/")
-def index(request):
+def index(request: Request):
     try:
         return Response(body=json.dumps({"host": socket.gethostname()}), headers={'content-type': 'application/json'})
     except Exception as ex:
@@ -130,15 +131,51 @@ async def users_post(request: Request) -> Response:
         conn = request.app['db_pool']
         session_maker = sessionmaker(bind=conn)
         session = session_maker()
+
         if data:
+            user = session.query(Users).filter_by(login=data['login']).first()
+            if user:
+                return HTTPConflict()
+
             user = UsersSchema().load(data, session=session)
+
             session.add(user)
             session.commit()
-            return Response(headers={'Location': f"/users/{user.id}"})
+            return Response(headers={'Location': f"/users/{user.login}"})
         else:
             return HTTPBadRequest()
     except Exception as ex:
         log.warning(f"Endpoint: /users, Method: post. Error:{str(ex)}")
+        return HTTPInternalServerError()
+
+
+@routes.put("/users/{login}")
+async def users_post(request: Request) -> Response:
+    try:
+        data = await request.json()
+
+        conn = request.app['db_pool']
+        session_maker = sessionmaker(bind=conn)
+        session = session_maker()
+
+        if data:
+            user = session.query(Users).filter_by(login=request.match_info['login']).first()
+            if not user:
+                return HTTPNotFound()
+
+            user_put = UsersSchema().load(data, session=session, partial=True)
+
+            user.first_name = user_put.first_name
+            user.last_name = user_put.last_name
+            user.email = user_put.email
+            user.phone = user_put.phone
+
+            session.commit()
+            return Response(headers={'Location': f"/users/{user.login}"})
+        else:
+            return HTTPBadRequest()
+    except Exception as ex:
+        log.warning(f"Endpoint: /users/login, Method: put. Error:{str(ex)}")
         return HTTPInternalServerError()
 
 
@@ -154,7 +191,7 @@ async def users_post(request: Request) -> Response:
         if not user:
             return HTTPNotFound()
 
-        session.delete(Users).filtre_by(login=request.match_info['login'])
+        session.delete(user)
         session.commit()
         return HTTPNoContent()
     except Exception as ex:
