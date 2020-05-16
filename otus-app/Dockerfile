@@ -16,7 +16,6 @@ RUN pip wheel --wheel-dir=/root/wheels multidict
 
 FROM python:3.7-alpine
 COPY --from=builder /root/.local /root/.local
-#COPY --from=builder /install /usr/local
 COPY --from=builder_multidict /root/wheels /root/wheels
 RUN pip install \
       --no-index \
