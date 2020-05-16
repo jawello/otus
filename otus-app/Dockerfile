@@ -21,8 +21,9 @@ RUN pip install \
       --no-index \
       --find-links=/root/wheels \
       multidict
-COPY main.py /app/main.py
-COPY models /app/models
+COPY . /app/
+#COPY main.py /app/main.py
+#COPY models /app/models
 RUN apk --no-cache add libpq
 WORKDIR /app
 VOLUME ["/app/config/otus.yaml"]
