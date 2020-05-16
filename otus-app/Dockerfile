@@ -1,10 +1,9 @@
 FROM python:3.7-alpine as builder
 COPY otus-app/requirements.txt .
 RUN apk update \
-  && apk add --virtual build-deps gcc python3-dev musl-dev \
+  && apk add --virtual build-deps autoconf automake g++ gcc make python3-dev musl-dev \
   && apk add postgresql-dev \
-  && pip install --no-cache-dir alembic psycopg2-binary \
-  && apk del build-deps gcc
+  && pip install --no-cache-dir psycopg2-binary
 RUN pip install --upgrade pip
 RUN pip install --user -r requirements.txt
 
