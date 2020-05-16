@@ -5,5 +5,5 @@ database:
   DB_NAME: 'postgres'
   DB_USER: 'postgres'
   DB_PASS: 'otus'
-  DB_HOST: 'localhost'
+  DB_HOST: 'postgres'
   DB_PORT: 5432

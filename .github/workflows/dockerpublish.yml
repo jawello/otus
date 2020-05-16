@@ -25,24 +25,3 @@ jobs:
           IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus
           TAG_NAME: ${{ steps.get_version.outputs.VERSION_OTUS_APP }}
           LATEST: "true"
-  docker-init_db:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION_OTUS_INIT_DB::${GITHUB_REF#*v}
-      - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - name: Docker Build & Push to Docker Hub
-        uses: opspresso/action-docker@master
-        with:
-          args: --docker
-        env:
-          DOCKERFILE: "otus-app/init_db/Dockerfile"
-          USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus-init-db
-          TAG_NAME: ${{ steps.get_version.outputs.VERSION_OTUS_INIT_DB }}
-          LATEST: "true"

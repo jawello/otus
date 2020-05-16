@@ -1,17 +1,20 @@
 import yaml
+import socket
+import json
+
 from aiohttp import web
 from aiohttp.web import Application
 from sqlalchemy import create_engine
-import json
-
-import socket
 from aiohttp.web import Request, HTTPInternalServerError
 from aiohttp.web_response import Response
+
+from init_db.migration import alembic_set_stamp_head
 from routes import setup_routes
 
 import logging
 
 log = logging.getLogger(__name__)
+
 routes = web.RouteTableDef()
 
 
@@ -73,6 +76,7 @@ def index(request: Request):
 
 
 def main(config_path):
+    alembic_set_stamp_head()
     if not config_path:
         app = web.Application()
         app.add_routes(routes)
