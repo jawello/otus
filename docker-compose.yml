@@ -11,9 +11,9 @@ services:
     restart: on-failure
   init_db:
     build:
-      context: init_db
+      context: ./otus-app/init_db
     volumes:
-      - ${PWD}/config/alembic.ini:/migration/alembic.ini
+      - ${PWD}/otus-app/config/alembic.ini:/migration/alembic.ini
     networks:
       - app
     depends_on:
@@ -21,9 +21,11 @@ services:
     restart: on-failure
   otus_app:
     build:
-      context: .
+      context: ./otus-app
     volumes:
-      - ${PWD}/config/otus.yaml:/app/config/otus.yaml
+      - ${PWD}/otus-app/config/otus.yaml:/app/config/otus.yaml
+    ports:
+      - "80:8000"
     networks:
       - app
     depends_on:
