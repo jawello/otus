@@ -19,7 +19,8 @@ jobs:
         with:
           args: --docker
         env:
-          DOCKERFILE: "otus-app/Dockerfile"
+          BUILD_PATH: "otus-app/"
+          DOCKERFILE: "Dockerfile"
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus
@@ -39,7 +40,8 @@ jobs:
         with:
           args: --docker
         env:
-          DOCKERFILE: "otus-app/init_db/Dockerfile"
+          BUILD_PATH: "otus-app/init_db/"
+          DOCKERFILE: "Dockerfile"
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus-init-db
