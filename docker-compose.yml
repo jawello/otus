@@ -19,5 +19,15 @@ services:
     depends_on:
       - postgres
     restart: on-failure
+  otus_app:
+    build:
+      context: .
+    volumes:
+      - ${PWD}/config/otus.yaml:/app/config/otus.yaml
+    networks:
+      - app
+    depends_on:
+      - init_db
+    restart: on-failure
 networks:
   app:
