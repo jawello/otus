@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: Docker Build & Push to Docker Hub
-        uses: opspresso/action-docker@v0.2.12
+        uses: opspresso/action-docker@master
         with:
           args: --docker
         env:
