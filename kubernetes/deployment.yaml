@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: otus
-          image: jawello/otus:0.0.2
+          image: jawello/otus:0.0.3
           ports:
             - name: web
               containerPort: 8000
@@ -31,3 +31,10 @@ spec:
               path: /health
             initialDelaySeconds: 10
             periodSeconds: 5
+          volumeMounts:
+            - name: otus-app-config-volume
+              mountPath: /app/config
+      volumes:
+        - name: otus-app-config-volume
+          configMap:
+            name: otus-app-config
