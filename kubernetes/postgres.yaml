@@ -35,11 +35,20 @@ spec:
           name: postgredb
         env:
           - name: POSTGRES_DB
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: database-secret-config
+                key: dbname
           - name: POSTGRES_USER
-            value: postgres
+            valueFrom:
+              secretKeyRef:
+                name: database-secret-config
+                key: username
           - name: POSTGRES_PASSWORD
-            value: otus
+            valueFrom:
+              secretKeyRef:
+                name: database-secret-config
+                key: password
         volumeMounts:
         - name: postgredb
           mountPath: /var/lib/postgresql/data
@@ -53,3 +62,13 @@ spec:
       resources:
         requests:
           storage: 1Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-secret-config
+type: Opaque
+data:
+  dbname: cG9zdGdyZXM=
+  username: cG9zdGdyZXM=
+  password: b3R1cw==
