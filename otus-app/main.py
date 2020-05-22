@@ -75,8 +75,9 @@ def index(request: Request):
         return HTTPInternalServerError()
 
 
-def main(config_path):
-    alembic_set_stamp_head()
+def main(config_path, config_migration_path):
+    if config_migration_path:
+        alembic_set_stamp_head(config_migration_path)
     if not config_path:
         app = web.Application()
         app.add_routes(routes)
@@ -99,7 +100,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--config", help="Provide path to config file")
+    parser.add_argument("-cm", "--config-migration", help="Provide path to config migration file")
     args = parser.parse_args()
 
-    main(args.config)
+    main(args.config, args.config_migration)
 

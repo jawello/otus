@@ -19,6 +19,7 @@ jobs:
         with:
           args: --docker
         env:
+          BUILD_PATH: "otus-app"
           DOCKERFILE: "otus-app/Dockerfile"
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

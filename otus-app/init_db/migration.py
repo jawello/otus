@@ -5,13 +5,13 @@ from alembic import command
 import inspect
 
 
-def alembic_set_stamp_head():
+def alembic_set_stamp_head(config_migration_path):
     # set the paths values
     this_file_directory = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
     root_directory = os.path.join(this_file_directory, '../config')
     alembic_directory = os.path.join(this_file_directory, 'alembic')
-    ini_path = os.path.join(root_directory, 'alembic.ini')
-
+    ini_path = config_migration_path  # os.path.join(root_directory, 'alembic.ini')
+    
     # create Alembic config and feed it with paths
     config = Config(ini_path)
     config.set_main_option('script_location', alembic_directory)

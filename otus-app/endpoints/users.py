@@ -1,4 +1,5 @@
-from aiohttp.web import Request, HTTPInternalServerError, HTTPNotFound, HTTPConflict, HTTPBadRequest, HTTPNoContent
+from aiohttp.web import Request, HTTPInternalServerError, HTTPNotFound, HTTPConflict, HTTPBadRequest, HTTPNoContent, \
+    HTTPCreated
 from aiohttp.web_response import Response
 import json
 from aiohttp import web
@@ -82,7 +83,7 @@ async def users_post(request: Request) -> Response:
 
             session.add(user)
             session.commit()
-            return Response(headers={'Location': f"/users/{user.login}"})
+            return HTTPCreated(headers={'Location': f"/users/{user.login}"})
         else:
             return HTTPBadRequest()
     except Exception as ex:
@@ -112,7 +113,7 @@ async def users_put(request: Request) -> Response:
             user.phone = user_put.phone
 
             session.commit()
-            return Response(headers={'Location': f"/users/{user.login}"})
+            return HTTPNoContent(headers={'Location': f"/users/{user.login}"})
         else:
             return HTTPBadRequest()
     except Exception as ex:

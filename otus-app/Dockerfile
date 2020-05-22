@@ -25,6 +25,5 @@ COPY . /app
 RUN apk --no-cache add libpq
 WORKDIR /app
 VOLUME ["/app/config"]
-EXPOSE 8000
-ENTRYPOINT ["python", "main.py", "-c", "config/otus.yaml"]
+ENTRYPOINT ["python", "main.py", "-c", "/app/config/otus.yaml", "-cm", "/app/config/alembic.ini"]
 
