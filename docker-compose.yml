@@ -1,0 +1,26 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    networks:
+      - app
+    environment:
+      - POSTGRES_PASSWORD=otus
+    restart: on-failure
+  otus_app:
+    build:
+      context: ./otus-app
+    volumes:
+      - ${PWD}/otus-app/config/otus.yaml:/app/config/otus.yaml
+      - ${PWD}/otus-app/config/alembic.ini:/app/config/alembic.ini
+    ports:
+      - "80:8000"
+    networks:
+      - app
+    depends_on:
+      - postgres
+    restart: on-failure
+networks:
+  app:

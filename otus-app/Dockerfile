@@ -1,14 +1,30 @@
 FROM python:3.7-alpine as builder
-COPY otus-app/requirements.txt .
-RUN apk update \
-  && apk add --virtual build-deps autoconf automake g++ make build-deps gcc python3-dev musl-dev
+COPY requirements.txt .
 RUN pip install --upgrade pip
+RUN apk update \
+  && apk add --virtual build-deps autoconf automake g++ gcc make python3-dev musl-dev \
+  && apk add postgresql-dev
 RUN pip install --user -r requirements.txt
+RUN pip install --install-option="--prefix=/install" -r /requirements.txt
+
+FROM python:3.7-alpine as builder_multidict
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN apk update \
+  && apk add --virtual build-deps autoconf automake g++ gcc make python3-dev musl-dev
+RUN pip wheel --wheel-dir=/root/wheels multidict
 
 FROM python:3.7-alpine
 COPY --from=builder /root/.local /root/.local
-COPY otus-app/main.py /app/main.py
+COPY --from=builder_multidict /root/wheels /root/wheels
+RUN pip install \
+      --no-index \
+      --find-links=/root/wheels \
+      multidict
+COPY . /app
+RUN apk --no-cache add libpq
 WORKDIR /app
+VOLUME ["/app/config"]
 EXPOSE 8000
-ENTRYPOINT ["python", "main.py"]
+ENTRYPOINT ["python", "main.py", "-c", "config/otus.yaml"]
 

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: otus
-          image: jawello/otus:0.0.3
+          image: jawello/otus:stateful_set
           ports:
             - name: web
               containerPort: 8000
