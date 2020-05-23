@@ -1,0 +1,16 @@
+apiVersion: skaffold/v2beta4
+kind: Config
+metadata:
+  name: otus-docker
+build:
+  artifacts:
+  - image: jawello/otus
+    context: otus-app
+deploy:
+  kubectl:
+    manifests:
+    - kubernetes/app-config.yaml
+    - kubernetes/deployment.yaml
+    - kubernetes/ingress.yaml
+    - kubernetes/postgres.yaml
+    - kubernetes/service.yaml
