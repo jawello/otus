@@ -1,0 +1,31 @@
+# Default values for otus-app-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image: jawello/otus:0.0.3
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  hosts:
+    - host: arch.homework
+      paths:
+        path: /otusapp($|/)(.*)
+
+
+postgresql:
+  enabled: true
+  postgresqlUsername: postgres
+  postgresqlPassword: otus
+  postgresqlDatabase: postgres
+  service:
+    port: "5432"
+
