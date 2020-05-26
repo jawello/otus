@@ -1,0 +1,16 @@
+apiVersion: v2
+name: otus-app-chart
+description: Simple app with CRUD
+
+type: application
+
+version: 0.1.0
+appVersion: 0.0.3
+
+dependencies:
+  - name: postgresql
+    version: 8.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+    tags:
+      - myapp-database
