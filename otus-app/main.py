@@ -2,6 +2,9 @@ import yaml
 import socket
 import json
 
+import asyncio
+from metrics import setup_metrics
+
 from aiohttp import web
 from aiohttp.web import Application
 from sqlalchemy import create_engine
@@ -18,9 +21,27 @@ log = logging.getLogger(__name__)
 routes = web.RouteTableDef()
 
 
+@asyncio.coroutine
+def error_middleware(app, handler):
+
+    @asyncio.coroutine
+    def middleware_handler(request):
+        try:
+            response = yield from handler(request)
+            return response
+        except web.HTTPException as ex:
+            resp = web.Response(body=str(ex), status=ex.status)
+            return resp
+        except Exception as ex:
+            resp = web.Response(body=str(ex), status=500)
+            return resp
+
+    return middleware_handler
+
+
 async def init_db(app):
     dsn = construct_db_url(app['config']['database'])
-    pool = create_engine(dsn, pool_size=20, max_overflow=0)
+    pool = create_engine(dsn, pool_size=20, max_overflow=10)
     app['db_pool'] = pool
     return pool
 
@@ -37,7 +58,8 @@ def construct_db_url(config):
 
 
 async def init_app(config) -> Application:
-    app = web.Application()
+    app = web.Application(middlewares=[error_middleware])
+    setup_metrics(app, "otus-app")
     app['config'] = config
     app.add_routes(routes)
     setup_routes(app)

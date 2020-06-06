@@ -4,10 +4,10 @@
 
 replicaCount: 2
 
-image: jawello/otus:0.0.4
+image: jawello/otus:0.0.5
 
 service:
-  type: ClusterIP
+  type: NodePort
   port: 8000
 
 ingress:
@@ -20,6 +20,10 @@ ingress:
       paths:
         path: /otusapp($|/)(.*)
 
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
 
 postgresql:
   enabled: true
@@ -28,4 +32,17 @@ postgresql:
   postgresqlDatabase: postgres
   service:
     port: "5432"
+  metrics:
+    enabled: true
+    service:
+      type: NodePort
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {}
+      namespace: monitoring
+      interval: 30s
+      scrapeTimeout: 10s
 
