@@ -4,7 +4,7 @@
 
 replicaCount: 2
 
-image: jawello/otus:0.0.4
+image: jawello/otus:0.0.5
 
 service:
   type: NodePort
