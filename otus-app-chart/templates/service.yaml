@@ -10,5 +10,6 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: http
       protocol: TCP
+      name: web
   selector:
     {{- include "otus-app-chart.selectorLabels" . | nindent 4 }}
