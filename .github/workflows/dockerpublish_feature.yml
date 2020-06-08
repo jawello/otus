@@ -1,4 +1,4 @@
-name: Docker Push Dev
+name: Docker Push Feature
 on:
   push:
     branches:
