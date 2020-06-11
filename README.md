@@ -125,11 +125,24 @@ ingress-controller, передавая значение имени сервис�
 1. Потребление подами приложения памяти
 2. Потребление подами приолжения CPU
 
-p.s.
-Команды для установки prometheus и nginx-controller, а так же добавление
-dashboard'а в grafan'у (имя dashboard'а *Service*): 
+### Дополнение
+Все команды выолняются из root'овой директории проекта.
+#### Команда для установки prometheus
 ```bash
 helm install prom stable/prometheus-operator -f prometheus/prometheus.yaml --atomic
-helm install nginx stable/nginx-ingress -f prometheus/nginx-ingress.yaml --atomic 
+```
+#### Команда для установки nginx-controller
+```bash
+helm install nginx stable/nginx-ingress -f prometheus/nginx-ingress.yaml --atomic
+```
+#### Команда для добавления dashboard'а в grafan'у (имя dashboard'а "Service") 
+```bash 
 kubectl apply -f prometheus/grafana.yaml 
 ```
+#### Команда для запуска стресс-теста
+```bash
+skaffold run -f stresstest.skaffold.yaml 
+```
+Параметры запуска stresstest'а находятся в stresstest-chart/values.yaml.
+Это параметры для запуска 
+[locust'а](https://docs.locust.io/en/stable/configuration.html) . 
