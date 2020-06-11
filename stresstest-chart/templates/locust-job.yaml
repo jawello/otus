@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: locust-stresstest
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: locust
+          image: {{ .Values.image }}
+          env:
+          {{- range $key, $value := .Values.locust }}
+            - name: {{ $key | upper }}
+              {{- if $value }}
+              value: {{ $value | quote }}
+              {{- end }}
+          {{- end }}
+  backoffLimit: 2

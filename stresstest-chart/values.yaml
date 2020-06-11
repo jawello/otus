@@ -1,0 +1,11 @@
+image: jawello/locust:0.0.5
+
+locust:
+  locust_target_host: http://nginx-nginx-ingress-controller/otusapp
+  locust_users: 100
+  locust_hatch_rate: 10
+  locust_run_time: 5m
+  locust_step_load:
+  locust_step_users: 20
+  locust_step_time: 30s
+  locust_script: /locust-tasks/tasks.py

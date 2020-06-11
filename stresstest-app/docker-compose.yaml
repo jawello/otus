@@ -1,0 +1,17 @@
+version: '3'
+services:
+    locust:
+        image: jawello/locust:0.0.5
+        build:
+            context: .
+        environment:
+            - "LOCUST_USERS=200"
+            - "LOCUST_HATCH_RATE=10"
+            - "LOCUST_RUN_TIME=10m"
+            - "LOCUST_STEP_LOAD"
+            - "LOCUST_STEP_USERS=25"
+            - "LOCUST_STEP_TIME=15s"
+            - "LOCUST_TARGET_HOST=http://arch.homework/otusapp"
+            - "LOCUST_SCRIPT=/locust-tasks/tasks.py"
+        volumes:
+            - ./app/locust-tasks/tasks.py:/locust-tasks/tasks.py

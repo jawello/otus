@@ -1,10 +1,15 @@
+from typing import Callable, Awaitable
+
 import yaml
 import socket
 import json
 
+from metrics import setup_metrics
+
 from aiohttp import web
 from aiohttp.web import Application
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from aiohttp.web import Request, HTTPInternalServerError
 from aiohttp.web_response import Response
 
@@ -18,11 +23,26 @@ log = logging.getLogger(__name__)
 routes = web.RouteTableDef()
 
 
+@web.middleware
+async def error_middleware(request: web.Request, handler: Callable[[web.Request], Awaitable[web.StreamResponse]]) \
+        -> web.StreamResponse:
+    try:
+        return await handler(request)
+    except web.HTTPException as ex:
+        resp = web.Response(body=str(ex), status=ex.status)
+        return resp
+    except Exception as ex:
+        log.warning(f"Endpoint: {request.path}, Method: {request.method}. Error:{str(ex)}")
+        resp = HTTPInternalServerError(body=str(ex))
+        return resp
+
+
 async def init_db(app):
     dsn = construct_db_url(app['config']['database'])
-    pool = create_engine(dsn, pool_size=20, max_overflow=0)
-    app['db_pool'] = pool
-    return pool
+    pool = create_engine(dsn, pool_size=20, max_overflow=10)
+    session_maker = sessionmaker(bind=pool)
+    app['db_session_manager'] = sessionmaker(bind=pool)
+    return session_maker
 
 
 def construct_db_url(config):
@@ -37,12 +57,13 @@ def construct_db_url(config):
 
 
 async def init_app(config) -> Application:
-    app = web.Application()
+    app = web.Application(middlewares=[error_middleware])
+    setup_metrics(app, "otus-app")
     app['config'] = config
     app.add_routes(routes)
     setup_routes(app)
     db_pool = await init_db(app)
-    app['db_pool'] = db_pool
+    app['db_session_manager'] = db_pool
     log.debug(app['config'])
     return app
 
