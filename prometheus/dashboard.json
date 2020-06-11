@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 26,
+  "id": 25,
   "links": [],
   "panels": [
     {
@@ -24,6 +24,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -55,11 +61,11 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (exported_endpoint)(rate(requests_total[1m]))",
+          "expr": "sum by (grouped_endpoint)(rate(label_replace( label_replace(requests_total, \"grouped_endpoint\", \"$0\", \"exported_endpoint\", \".*\"), \"grouped_endpoint\", \"/users/{login}\", \"exported_endpoint\", \"/users.+\")[1m:]))",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -114,6 +120,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -149,7 +161,7 @@
       "steppedLine": true,
       "targets": [
         {
-          "expr": "resets(requests_total{exported_endpoint=\"/users\"}[1m])",
+          "expr": "sum by (instance) (resets(requests_total{exported_endpoint=\"/users\"}[1m]))",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -204,6 +216,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -235,11 +253,11 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(requests_total{exported_endpoint=\"/users\"}[1m])",
+          "expr": "sum by(instance) (irate(requests_total[1m]))",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -294,6 +312,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -382,6 +406,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -417,7 +447,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.5, sum by (exported_endpoint, le) ( rate(request_latency_seconds_bucket[1m]) )) * 1000",
+          "expr": "histogram_quantile(0.5, max by (grouped_endpoint, le) ( rate(label_replace( label_replace(request_latency_seconds_bucket{exported_endpoint!='/metrics'}, \"grouped_endpoint\", \"$0\", \"exported_endpoint\", \".*\"), \"grouped_endpoint\", \"/users/{login}\", \"exported_endpoint\", \"/users.+\")[1m:]) )) * 1000",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -470,6 +500,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -505,7 +541,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum by (exported_endpoint, le) ( rate(request_latency_seconds_bucket[1m]) )) * 1000",
+          "expr": "histogram_quantile(0.95, max by (grouped_endpoint, le) ( rate(label_replace( label_replace(request_latency_seconds_bucket{exported_endpoint!='/metrics'}, \"grouped_endpoint\", \"$0\", \"exported_endpoint\", \".*\"), \"grouped_endpoint\", \"/users/{login}\", \"exported_endpoint\", \"/users.+\")[1m:]) )) * 1000",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -560,6 +596,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -595,7 +637,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum by (exported_endpoint, le) ( rate(request_latency_seconds_bucket[1m]) )) * 1000",
+          "expr": "histogram_quantile(0.99, max by (grouped_endpoint, le) ( rate(label_replace( label_replace(request_latency_seconds_bucket{exported_endpoint!='/metrics'}, \"grouped_endpoint\", \"$0\", \"exported_endpoint\", \".*\"), \"grouped_endpoint\", \"/users/{login}\", \"exported_endpoint\", \"/users.+\")[1m:]) )) * 1000",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -650,6 +692,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -685,7 +733,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(1, sum by (exported_endpoint, le) ( rate(request_latency_seconds_bucket[1m]) )) * 1000",
+          "expr": "histogram_quantile(1, max by (grouped_endpoint, le) ( rate(label_replace( label_replace(request_latency_seconds_bucket{exported_endpoint!='/metrics'}, \"grouped_endpoint\", \"$0\", \"exported_endpoint\", \".*\"), \"grouped_endpoint\", \"/users/{login}\", \"exported_endpoint\", \"/users.+\")[1m:]) )) * 1000",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -775,6 +823,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -810,7 +864,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.5, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[5m])) by (le)) * 1000",
+          "expr": "histogram_quantile(0.5, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[1m])) by (le)) * 1000",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -906,6 +960,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -941,7 +1001,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[5m])) by (le)) * 1000",
+          "expr": "histogram_quantile(0.95, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[1m])) by (le)) * 1000",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1003,7 +1063,7 @@
           {
             "evaluator": {
               "params": [
-                80
+                100
               ],
               "type": "gt"
             },
@@ -1037,6 +1097,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1072,7 +1138,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[5m])) by (le)) * 1000",
+          "expr": "histogram_quantile(0.99, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[1m])) by (le)) * 1000",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1084,7 +1150,7 @@
           "fill": true,
           "line": true,
           "op": "gt",
-          "value": 80
+          "value": 100
         }
       ],
       "timeFrom": null,
@@ -1133,6 +1199,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1168,7 +1240,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(1, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[5m])) by (le)) * 1000",
+          "expr": "histogram_quantile(1, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket[1m])) by (le)) * 1000",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1221,6 +1293,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1334,11 +1412,11 @@
           }
         ],
         "executionErrorState": "alerting",
-        "for": "5m",
+        "for": "1m",
         "frequency": "1m",
         "handler": 1,
         "name": "Nginx Error Rate alert",
-        "noDataState": "no_data",
+        "noDataState": "ok",
         "notifications": []
       },
       "aliasColors": {},
@@ -1346,6 +1424,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1419,7 +1503,7 @@
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -1441,6 +1525,12 @@
       "dashboardFilter": "",
       "dashboardTags": [],
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "folderId": null,
       "gridPos": {
         "h": 7,
@@ -1470,6 +1560,12 @@
       "datasource": "Prometheus",
       "editable": true,
       "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "grid": {},
@@ -1810,7 +1906,7 @@
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -1819,7 +1915,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -1835,6 +1931,12 @@
       "datasource": "Prometheus",
       "editable": true,
       "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "grid": {},
@@ -1930,6 +2032,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1961,7 +2069,7 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
@@ -1995,7 +2103,7 @@
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -2004,7 +2112,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -2018,6 +2126,12 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2049,7 +2163,7 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
@@ -2101,8 +2215,8 @@
       }
     }
   ],
-  "refresh": false,
-  "schemaVersion": 22,
+  "refresh": "5s",
+  "schemaVersion": 25,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -2114,7 +2228,6 @@
   },
   "timepicker": {
     "refresh_intervals": [
-      "5s",
       "10s",
       "30s",
       "1m",
@@ -2129,8 +2242,5 @@
   "timezone": "",
   "title": "Service",
   "uid": "Og4jWWiGz",
-  "variables": {
-    "list": []
-  },
-  "version": 28
+  "version": 2
 }

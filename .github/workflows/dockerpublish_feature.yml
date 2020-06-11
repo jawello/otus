@@ -1,4 +1,4 @@
-name: Docker Push Dev
+name: Docker Push Feature
 on:
   push:
     branches:
@@ -25,3 +25,25 @@ jobs:
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus
           TAG_NAME: ${{ steps.get_version.outputs.VERSION_OTUS_APP }}
+  stresstest-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION_OTUS_APP::${GITHUB_REF#*v}
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: Docker Build & Push to Docker Hub
+        uses: opspresso/action-docker@master
+        with:
+          args: --docker
+        env:
+          BUILD_PATH: "stresstest-app"
+          DOCKERFILE: "stresstest-app/Dockerfile"
+          USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/locust
+          TAG_NAME: ${{ steps.get_version.outputs.VERSION_OTUS_APP }}
+          LATEST: "true"

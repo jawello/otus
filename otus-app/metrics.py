@@ -1,30 +1,28 @@
+from typing import Callable, Awaitable
 from prometheus_client import Counter, Gauge, Histogram, CONTENT_TYPE_LATEST
 import time
-import asyncio
 from aiohttp import web
 import prometheus_client
 
+app_name_metrics = None
 
-def prom_middleware(app_name):
-    @asyncio.coroutine
-    def factory(app, handler):
-        @asyncio.coroutine
-        def middleware_handler(request):
-            try:
-                request['start_time'] = time.time()
-                request.app['REQUEST_IN_PROGRESS'].labels(
-                            app_name, request.path, request.method).inc()
-                response = yield from handler(request)
-                resp_time = time.time() - request['start_time']
-                request.app['REQUEST_LATENCY'].labels(app_name, request.path).observe(resp_time)
-                request.app['REQUEST_IN_PROGRESS'].labels(app_name, request.path, request.method).dec()
-                request.app['REQUEST_COUNT'].labels(
-                            app_name, request.method, request.path, response.status).inc()
-                return response
-            except Exception as ex:
-                raise
-        return middleware_handler
-    return factory
+
+@web.middleware
+async def prom_middleware(request: web.Request, handler: Callable[[web.Request], Awaitable[web.StreamResponse]]) \
+        -> web.StreamResponse:
+    try:
+        request['start_time'] = time.time()
+        request.app['REQUEST_IN_PROGRESS'].labels(
+            app_name_metrics, request.path, request.method).inc()
+        response = await handler(request)
+        resp_time = time.time() - request['start_time']
+        request.app['REQUEST_LATENCY'].labels(app_name_metrics, request.path).observe(resp_time)
+        request.app['REQUEST_IN_PROGRESS'].labels(app_name_metrics, request.path, request.method).dec()
+        request.app['REQUEST_COUNT'].labels(
+            app_name_metrics, request.method, request.path, response.status).inc()
+        return response
+    except Exception as ex:
+        raise
 
 
 async def metrics(request):
@@ -47,7 +45,8 @@ def setup_metrics(app, app_name):
         'requests_in_progress_total', 'Requests in progress',
         ['app_name', 'endpoint', 'method']
     )
-
-    app.middlewares.insert(0, prom_middleware(app_name))
+    global app_name_metrics
+    app_name_metrics = app_name
+    app.middlewares.insert(0, prom_middleware)
     app.router.add_get("/metrics", metrics)
 

@@ -1,0 +1,17 @@
+apiVersion: skaffold/v2beta4
+kind: Config
+metadata:
+  name: otus-docker
+build:
+  artifacts:
+  - image: jawello-locust-stresstest
+    context: stresstest-app
+deploy:
+  helm:
+    releases:
+      - name: locust-chart
+        chartPath: stresstest-chart
+        artifactOverrides:
+          image: jawello-locust-stresstest
+        valuesFiles:
+          - stresstest-chart/values.yaml
