@@ -11,9 +11,9 @@ services:
     restart: on-failure
   otus_app:
     build:
-      context: ./otus-app
+      context: ""
     volumes:
-      - ${PWD}/otus-app/config:/app/config
+      - ${PWD}/config:/app/config
     ports:
       - "8080:8000"
     networks:
