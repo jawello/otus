@@ -1,4 +1,4 @@
-from aiohttp.web import Request, HTTPInternalServerError, HTTPNotFound, HTTPConflict, HTTPBadRequest, HTTPNoContent, \
+from aiohttp.web import Request, HTTPNotFound, HTTPConflict, HTTPBadRequest, HTTPNoContent, \
     HTTPCreated
 from aiohttp.web_response import Response
 import json
@@ -74,7 +74,7 @@ async def users_post(request: Request) -> Response:
 
             session.add(user)
             session.commit()
-            return HTTPCreated(headers={'Location': f"/users/{user.login}"})
+            return HTTPCreated(headers={'Location': f"/users/{user.login}"}, body=json.dumps({'id': user.id}))
         else:
             return HTTPBadRequest()
     except Exception:
