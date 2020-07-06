@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION_OTUS_APP::${GITHUB_REF#*v}
+        run: echo ::set-output name=VERSION_OTUS_APP::${GITHUB_REF#refs/heads/feature}
       - name: Checkout
         uses: actions/checkout@v1
         with:
