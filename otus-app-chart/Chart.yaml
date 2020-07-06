@@ -5,7 +5,7 @@ description: Simple app with CRUD
 type: application
 
 version: 0.1.0
-appVersion: 0.0.5
+appVersion: 0.0.6
 
 dependencies:
   - name: postgresql
@@ -14,3 +14,4 @@ dependencies:
     condition: postgresql.enabled
     tags:
       - myapp-database
+
