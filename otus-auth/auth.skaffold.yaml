@@ -1,0 +1,17 @@
+apiVersion: skaffold/v2beta4
+kind: Config
+metadata:
+  name: otus-docker
+build:
+  artifacts:
+  - image: jawello-otus-auth
+    context: src
+deploy:
+  helm:
+    releases:
+      - name: otus-auth-chart
+        chartPath: otus-auth-chart
+        artifactOverrides:
+          image: jawello-otus-auth
+        valuesFiles:
+          - otus-auth-chart/values.yaml
