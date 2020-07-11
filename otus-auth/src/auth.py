@@ -12,7 +12,7 @@ from aiohttp.web import Application
 from aiohttp.web import Request
 from aiohttp.web_response import Response
 from aiohttp.web_exceptions import HTTPConflict, HTTPCreated, HTTPBadRequest, HTTPAccepted, HTTPUnauthorized, \
-    HTTPNoContent, HTTPInternalServerError, HTTPNotAcceptable
+    HTTPNoContent, HTTPInternalServerError, HTTPNotAcceptable, HTTPNotFound
 from aiohttp_security import remember, authorized_userid, forget, check_permission
 from aiohttp_session.redis_storage import RedisStorage
 from aiohttp_security import SessionIdentityPolicy
@@ -187,6 +187,8 @@ async def session_post(request: Request):
 
         if data:
             user = session.query(Users).filter_by(login=data['login']).first()
+            if not user:
+                return HTTPNotFound()
 
             user_id = await authorized_userid(request)
             if UsersSchema.check_password_hash(data['password'], user.password):

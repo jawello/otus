@@ -16,18 +16,19 @@ services:
     networks:
       - app
     restart: on-failure
-#  otus_app:
-#    build:
-#      context: ""
-#    volumes:
-#      - ${PWD}/config:/app/config
-#    ports:
-#      - "8080:8000"
-#    networks:
-#      - app
-#    depends_on:
-#      - postgres
-#    restart: on-failure
-#    entrypoint: ["python", "main.py", "-c", "/app/config/otus.yaml", "-cm", "/app/config/alembic.ini"]
+  otus_auth:
+    build:
+      context: ""
+    volumes:
+      - ${PWD}/config:/app/config
+    ports:
+      - "9000:8080"
+    networks:
+      - app
+    depends_on:
+      - postgres
+      - redis
+    restart: on-failure
+    entrypoint: ["python", "auth.py", "-c", "/app/config/otus.yaml", "-cm", "/app/config/alembic.ini"]
 networks:
   app:

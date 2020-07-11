@@ -7,8 +7,8 @@ import bcrypt
 class PasswordCrypt(fields.Field):
     @staticmethod
     def generate_password_hash(password):
-        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        return hashed.decode('utf-8')
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+        return hashed
 
     def _deserialize(self, value, attr, obj, **kwargs):
         if value is None:
@@ -30,4 +30,4 @@ class UsersSchema(SQLAlchemySchema):
 
     @staticmethod
     def check_password_hash(plain_password, password_hash):
-        return bcrypt.checkpw(plain_password.encode('utf-8'), password_hash.encode('utf-8'))
+        return bcrypt.checkpw(plain_password, password_hash)
