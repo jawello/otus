@@ -232,7 +232,7 @@ async def signin_get(request: Request):
     user_id = await authorized_userid(request)
     if not user_id:
         return HTTPUnauthorized()
-    return Response(body=json.dumps({"message": "Please go to login and provide Login/Password"}))
+    return Response(body=json.dumps({"message": "Please go to /session and provide Login/Password"}))
 
 
 def main(config_path, config_migration_path):
