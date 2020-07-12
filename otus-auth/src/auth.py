@@ -7,7 +7,7 @@ import json
 from metrics import setup_metrics
 
 import aiohttp
-from aiohttp import web, ClientError, InvalidURL
+from aiohttp import web, ClientError, InvalidURL, ClientResponseError
 from aiohttp.web import Application
 from aiohttp.web import Request
 from aiohttp.web_response import Response
@@ -151,16 +151,17 @@ async def registration(request: Request):
             data_without_password = dict(data)
             data_without_password.pop('password')
 
-            if 'account_manager_url' in request.app['config']['app']:
-                account_manager_url = request.app['config']['app']['account_manager_url']
+            data_for_auth = {'login': data['login'], 'password': data['password']}
+            if 'account_manager' in request.app['config']['app']:
+                url = request.app['config']['app']['account_manager']['url']
                 async with aiohttp.ClientSession(raise_for_status=True) as http_client_session:
-                    async with http_client_session.post(account_manager_url, json=data_without_password) as \
+                    async with http_client_session.post(url, json=data_without_password) as \
                             resp:
                         account_manager_resp = await resp.json()
-                data['id'] = account_manager_resp['id']
-                user_serializer = UsersSchema(only=('id', 'login', 'password')).load(data, session=session)
+                data_for_auth['id'] = account_manager_resp['id']
+                user_serializer = UsersSchema().load(data_for_auth, session=session)
             else:
-                user_serializer = UsersSchema(only=('login', 'password')).load(data, session=session)
+                user_serializer = UsersSchema().load(data_for_auth, session=session)
 
             session.add(user_serializer)
             session.commit()
@@ -169,9 +170,11 @@ async def registration(request: Request):
             return HTTPBadRequest()
     except InvalidURL as ex:
         raise Exception(f"""Invalid url account_manager:{str(ex)}""")
+    except ClientResponseError:
+        return HTTPConflict()
     except ClientError as ex:
         raise Exception(f"""Can't connect to account_manager:{str(ex)}""")
-    except Exception as ex:
+    except Exception:
         session.rollback()
         raise
     finally:
@@ -251,9 +254,9 @@ def main(config_path, config_migration_path):
         app_config = config.get('app', None)
 
     if app_config:
-        web.run_app(app, port=app_config.get('port', 8000))
+        web.run_app(app, port=app_config.get('port', 9000))
     else:
-        web.run_app(app, port=8000)
+        web.run_app(app, port=9000)
 
 
 if __name__ == '__main__':

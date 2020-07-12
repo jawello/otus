@@ -6,8 +6,8 @@ database:
   DB_NAME: 'postgres'
   DB_USER: 'postgres'
   DB_PASS: 'otus'
-  DB_HOST: 'postgres'
+  DB_HOST: 'postgres-auth'
   DB_PORT: 5432
 redis:
-  REDIS_HOST: 'redis'
+  REDIS_HOST: 'redis-auth'
   REDIS_PORT: 6379
