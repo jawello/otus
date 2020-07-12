@@ -74,7 +74,8 @@ async def users_post(request: Request) -> Response:
 
             session.add(user)
             session.commit()
-            return HTTPCreated(headers={'Location': f"/users/{user.login}"}, body=json.dumps({'id': user.id}))
+            return HTTPCreated(headers={'Location': f"/users/{user.login}", 'Content-Type': 'application/json'},
+                               body=json.dumps({'id': user.id}))
         else:
             return HTTPBadRequest()
     except Exception:
