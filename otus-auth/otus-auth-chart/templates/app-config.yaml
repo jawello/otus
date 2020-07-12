@@ -6,7 +6,7 @@ data:
   otus.yaml: |
     app:
       loglevel: DEBUG
-      port: 8000
+      port: 9000
     database:
       DB_NAME: {{ .Values.postgresql.postgresqlDatabase }}
       DB_USER: {{ .Values.postgresql.postgresqlUsername }}
@@ -14,7 +14,7 @@ data:
       DB_HOST: {{ (include "postgresql.fullname" .) }}
       DB_PORT: {{ .Values.postgresql.service.port }}
     redis:
-      REDIS_HOST: {{ (include "redis.fullname" .) }}
+      REDIS_HOST: {{ printf "%s-%s" (include "redis.fullname" .) "master" }}
       REDIS_PORT: {{ .Values.redis.redisPort }}
 
   alembic.ini: |

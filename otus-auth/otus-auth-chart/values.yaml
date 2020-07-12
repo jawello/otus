@@ -31,4 +31,6 @@ postgresql:
 redis:
   enabled: true
   usePassword: false
-  redisPort: 6379
+  redisPort: "6379"
+  cluster:
+    enabled: false
