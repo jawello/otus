@@ -4,14 +4,19 @@
 
 replicaCount: 1
 
-image: jawello/otus-auth:0.0.5
+fullnameOverride: "otus-auth"
+
+image: jawello/otus-auth:auth
 
 service:
   type: NodePort
   port: 9000
 
+appservice:
+  url: 'http://otus-app-chart:8000/users'
+
 ingress:
-  enabled: true
+  enabled: false
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/rewrite-target: /$2

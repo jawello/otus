@@ -7,6 +7,8 @@ data:
     app:
       loglevel: DEBUG
       port: 9000
+      account_manager:
+        url: {{ .Values.appservice.url }}
     database:
       DB_NAME: {{ .Values.postgresql.postgresqlDatabase }}
       DB_USER: {{ .Values.postgresql.postgresqlUsername }}
@@ -60,7 +62,7 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: database-secret-config
+  name: auth-database-secret-config
 type: Opaque
 data:
   dbname: {{ .Values.postgresql.postgresqlDatabase | b64enc }}
