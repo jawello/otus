@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: otus-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "http://otus-auth.default.svc.cluster.local:9000/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "http://$host/signin"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-UserId"
+spec:
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - path: /users/
+        backend:
+          serviceName: otus-app-chart
+          servicePort: 8000
