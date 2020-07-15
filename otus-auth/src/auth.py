@@ -193,10 +193,10 @@ async def session_post(request: Request):
             if not user:
                 return HTTPNotFound()
 
-            user_id = await authorized_userid(request)
+            user_id = user.id
             if UsersSchema.check_password_hash(data['password'], user.password):
                 response = HTTPAccepted()
-                await remember(request, response, str(user.id))
+                await remember(request, response, json.dumps({'user_id': user_id, 'login': user.login}))
                 return response
             else:
                 response = HTTPUnauthorized()
@@ -225,11 +225,11 @@ async def session_post(request: Request):
 
 @routes.route("*", "/auth")
 async def auth(request: Request):
-    user_id = await authorized_userid(request)
-    if not user_id:
+    json_data = await authorized_userid(request)
+    if not json_data:
         return HTTPUnauthorized()
-
-    return Response(headers={'X-UserId': user_id})
+    json_data = json.loads(json_data)
+    return Response(headers={'X-Login': str(json_data['login']), 'X-UserId': str(json_data['user_id'])})
 
 
 @routes.get("/signin")
