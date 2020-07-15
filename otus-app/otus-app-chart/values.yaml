@@ -1,0 +1,47 @@
+# Default values for otus-app-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image: jawello/otus:0.0.5
+
+service:
+  type: NodePort
+  port: 8000
+
+ingress:
+  enabled: false
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  hosts:
+    - host: arch.homework
+      paths:
+        path: /otusapp($|/)(.*)
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
+postgresql:
+  enabled: true
+  postgresqlUsername: postgres
+  postgresqlPassword: otus
+  postgresqlDatabase: postgres
+  service:
+    port: "5432"
+  metrics:
+    enabled: true
+    service:
+      type: NodePort
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {}
+      namespace: monitoring
+      interval: 30s
+      scrapeTimeout: 10s

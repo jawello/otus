@@ -1,0 +1,34 @@
+version: "3"
+services:
+  postgres-auth:
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    networks:
+      - auth
+    environment:
+      - POSTGRES_PASSWORD=otus
+    restart: on-failure
+  redis-auth:
+    image: redis:5-alpine
+    ports:
+      - 6379:6379
+    networks:
+      - auth
+    restart: on-failure
+  otus_auth:
+    build:
+      context: ""
+    volumes:
+      - ${PWD}/config:/app/config
+    ports:
+      - "9000:8080"
+    networks:
+      - app
+    depends_on:
+      - postgres
+      - redis
+    restart: on-failure
+    entrypoint: ["python", "auth.py", "-c", "/app/config/otus.yaml", "-cm", "/app/config/alembic.ini"]
+networks:
+  auth:

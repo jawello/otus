@@ -1,0 +1,5 @@
+docker-compose.yaml
+requirement.txt
+config
+Dockerfile
+dev.*

@@ -1,0 +1,655 @@
+{
+	"info": {
+		"_postman_id": "ac6c221f-fda5-46b5-a2fb-4b89e06a30bc",
+		"name": "otus-app-auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "registration 1st user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e991cabe-b57e-4810-8f39-41d65285d8dc",
+						"exec": [
+							"var value =  pm.collectionVariables.replaceIn('{{$randomUserName}}');",
+							"pm.collectionVariables.set(\"login_1\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomPassword}}');",
+							"pm.collectionVariables.set(\"password_1\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomFirstName}}');",
+							"pm.collectionVariables.set(\"first_name_1\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomLastName}}');",
+							"pm.collectionVariables.set(\"last_name_1\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomEmail}}');",
+							"pm.collectionVariables.set(\"email_1\", value);",
+							"\t",
+							"value =  pm.collectionVariables.replaceIn('{{$randomPhoneNumber}}');",
+							"pm.collectionVariables.set(\"phone_1\", value);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "cab7ebe8-ec7b-43a5-8168-a9ab62cd60e1",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"",
+							"var login = pm.collectionVariables.get(\"login_1\");",
+							"",
+							"pm.test(\"Location header is present and right\", function () {",
+							"    pm.response.to.have.header(\"Location\");",
+							"    pm.response.to.be.header(\"Location\", \"/users/\" + login)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"first_name\": \"{{first_name_1}}\",\n\t\"password\": \"{{password_1}}\",\n\t\"last_name\": \"{{last_name_1}}\",\n\t\"login\": \"{{login_1}}\",\n\t\"email\": \"{{email_1}}\",\n\t\"phone\": \"{{phone_1}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/registration",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get 1st user unauthenticated",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2bf68162-d110-4fbd-9e57-46858e188b8c",
+						"exec": [
+							"",
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/users/{{login_1}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{login_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "authentication 1st user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a077f273-2c7a-44e5-9288-33164582cb95",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"login\": \"{{login_1}}\",\n\t\"password\": \"{{password_1}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/session",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"session"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get 1st user success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2bf68162-d110-4fbd-9e57-46858e188b8c",
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var login = pm.collectionVariables.get(\"login_1\");",
+							"var first_name = pm.collectionVariables.get(\"first_name_1\");",
+							"var last_name = pm.collectionVariables.get(\"last_name_1\");",
+							"var email = pm.collectionVariables.get(\"email_1\");",
+							"var phone = pm.collectionVariables.get(\"phone_1\");",
+							"",
+							"pm.test(\"Check Response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.login).to.eql(login);",
+							"    pm.expect(jsonData.first_name).to.eql(first_name);",
+							"    pm.expect(jsonData.last_name).to.eql(last_name);",
+							"    pm.expect(jsonData.email).to.eql(email);",
+							"    pm.expect(jsonData.phone).to.eql(phone);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/users/{{login_1}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{login_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update 1st user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7f08855b-5b0f-4212-9426-aa7bbcc5e7a4",
+						"exec": [
+							"value =  pm.collectionVariables.replaceIn('{{$randomFirstName}}');",
+							"pm.collectionVariables.set(\"first_name_1\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomLastName}}');",
+							"pm.collectionVariables.set(\"last_name_1\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomEmail}}');",
+							"pm.collectionVariables.set(\"email_1\", value);",
+							"\t",
+							"value =  pm.collectionVariables.replaceIn('{{$randomPhoneNumber}}');",
+							"pm.collectionVariables.set(\"phone_1\", value);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "7719896c-8e58-456c-9cf9-917bbdbb0ea6",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							"var login = pm.collectionVariables.get(\"login_1\");",
+							"",
+							"pm.test(\"Location header is present and right\", function () {",
+							"    pm.response.to.have.header(\"Location\");",
+							"    pm.response.to.be.header(\"Location\", \"/users/\" + login)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"first_name\": \"{{first_name_1}}\",\n\t\"last_name\": \"{{last_name_1}}\",\n\t\"email\": \"{{email_1}}\",\n\t\"phone\": \"{{phone_1}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users/{{login_1}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{login_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get 1st user changed data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2bf68162-d110-4fbd-9e57-46858e188b8c",
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var login = pm.collectionVariables.get(\"login_1\");",
+							"var first_name = pm.collectionVariables.get(\"first_name_1\");",
+							"var last_name = pm.collectionVariables.get(\"last_name_1\");",
+							"var email = pm.collectionVariables.get(\"email_1\");",
+							"var phone = pm.collectionVariables.get(\"phone_1\");",
+							"",
+							"pm.test(\"Check Response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.login).to.eql(login);",
+							"    pm.expect(jsonData.first_name).to.eql(first_name);",
+							"    pm.expect(jsonData.last_name).to.eql(last_name);",
+							"    pm.expect(jsonData.email).to.eql(email);",
+							"    pm.expect(jsonData.phone).to.eql(phone);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/users/{{login_1}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{login_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout 1st user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ee492611-b28f-49d8-b430-27f47ec2f2c5",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/session",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"session"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "registration 2nd user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e991cabe-b57e-4810-8f39-41d65285d8dc",
+						"exec": [
+							"var value =  pm.collectionVariables.replaceIn('{{$randomUserName}}');",
+							"pm.collectionVariables.set(\"login_2\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomPassword}}');",
+							"pm.collectionVariables.set(\"password_2\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomFirstName}}');",
+							"pm.collectionVariables.set(\"first_name_2\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomLastName}}');",
+							"pm.collectionVariables.set(\"last_name_2\", value);",
+							"",
+							"value =  pm.collectionVariables.replaceIn('{{$randomEmail}}');",
+							"pm.collectionVariables.set(\"email_2\", value);",
+							"\t",
+							"value =  pm.collectionVariables.replaceIn('{{$randomPhoneNumber}}');",
+							"pm.collectionVariables.set(\"phone_2\", value);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "cab7ebe8-ec7b-43a5-8168-a9ab62cd60e1",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"",
+							"var login = pm.collectionVariables.get(\"login_2\");",
+							"",
+							"pm.test(\"Location header is present and right\", function () {",
+							"    pm.response.to.have.header(\"Location\");",
+							"    pm.response.to.be.header(\"Location\", \"/users/\" + login)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"first_name\": \"{{first_name_2}}\",\n\t\"password\": \"{{password_2}}\",\n\t\"last_name\": \"{{last_name_2}}\",\n\t\"login\": \"{{login_2}}\",\n\t\"email\": \"{{email_2}}\",\n\t\"phone\": \"{{phone_2}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "arch.homework/registration",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "authentication 2nd user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a077f273-2c7a-44e5-9288-33164582cb95",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"login\": \"{{login_2}}\",\n\t\"password\": \"{{password_2}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/session",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"session"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get 1st user forbidden",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2bf68162-d110-4fbd-9e57-46858e188b8c",
+						"exec": [
+							"",
+							"pm.test(\"Status code is 403\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/users/{{login_1}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{login_1}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ffa64b1a-7b6f-4411-bc30-c0c7310ffe43",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "bbed301c-5dc2-4102-9e79-a664f098fc46",
+				"type": "text/javascript",
+				"exec": [
+					"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true;",
+					"tests[\"[INFO] Response: \" + responseBody] = true;"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "9420bca8-1601-44e1-9ef4-c6cc5f823d50",
+			"key": "base_url",
+			"value": "arch.homework",
+			"type": "string"
+		},
+		{
+			"id": "cf8c3409-92e7-4a17-bd98-9531777627c5",
+			"key": "login_1",
+			"value": "Chet_Dietrich47",
+			"type": "string"
+		},
+		{
+			"id": "fdc95fbe-46ee-418a-a72d-b9767b7f2b9b",
+			"key": "email_1",
+			"value": "Claudia95@gmail.com",
+			"type": "string"
+		},
+		{
+			"id": "1ce62944-ae05-4947-93c2-9e70c72e2891",
+			"key": "first_name_1",
+			"value": "Cody",
+			"type": "string"
+		},
+		{
+			"id": "81a8712e-8cd7-4bcc-ad09-3f85ce5572d3",
+			"key": "last_name_1",
+			"value": "Cummings",
+			"type": "string"
+		},
+		{
+			"id": "65080110-d239-4fe5-9af2-6fa7555ce7e7",
+			"key": "phone_1",
+			"value": "119-380-6445",
+			"type": "string"
+		},
+		{
+			"id": "31983f7b-6930-44a7-bf3e-d3335492d34c",
+			"key": "password_1",
+			"value": "MpmB_iwzeXZRs0i",
+			"type": "string"
+		},
+		{
+			"id": "712a1275-e486-4033-a865-8e50fdb949dc",
+			"key": "email_2",
+			"value": "Aaliyah34@hotmail.com",
+			"type": "string"
+		},
+		{
+			"id": "c6fc3bdd-afbc-4336-a9ad-9b9f7fec4b7c",
+			"key": "first_name_2",
+			"value": "Alisa",
+			"type": "string"
+		},
+		{
+			"id": "0af347fb-22f7-482f-b073-374f1925ccc5",
+			"key": "last_name_2",
+			"value": "Von",
+			"type": "string"
+		},
+		{
+			"id": "7487429d-26dd-4d88-b7cc-c1a3616898c3",
+			"key": "login_2",
+			"value": "Juston_Donnelly55",
+			"type": "string"
+		},
+		{
+			"id": "a4f3c56f-3273-4bc9-a5f1-b3dba4d0cafc",
+			"key": "password_2",
+			"value": "pS8hvyg9lIy7dQw",
+			"type": "string"
+		},
+		{
+			"id": "7e23635e-f9e5-4df0-8d4d-ad4694077e39",
+			"key": "phone_2",
+			"value": "344-010-7148",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

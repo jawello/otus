@@ -1,0 +1,17 @@
+apiVersion: skaffold/v2beta4
+kind: Config
+metadata:
+  name: otus-app
+build:
+  artifacts:
+  - image: otus-app
+    context: otus-app/src
+deploy:
+  helm:
+    releases:
+      - name: otus-app-chart
+        chartPath: otus-app/otus-app-chart
+        artifactOverrides:
+          image: otus-app
+        valuesFiles:
+          - otus-app/otus-app-chart/values.yaml

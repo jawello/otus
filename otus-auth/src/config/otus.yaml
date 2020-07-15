@@ -1,0 +1,13 @@
+app:
+  loglevel: DEBUG
+  port: 8080
+#  account_manager_url: 'http://localhost'
+database:
+  DB_NAME: 'postgres'
+  DB_USER: 'postgres'
+  DB_PASS: 'otus'
+  DB_HOST: 'postgres-auth'
+  DB_PORT: 5432
+redis:
+  REDIS_HOST: 'redis-auth'
+  REDIS_PORT: 6379

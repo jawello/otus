@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otus-auth-config
+data:
+  otus.yaml: |
+    app:
+      loglevel: DEBUG
+      port: 9000
+      account_manager:
+        url: {{ .Values.appservice.url }}
+    database:
+      DB_NAME: {{ .Values.postgresql.postgresqlDatabase }}
+      DB_USER: {{ .Values.postgresql.postgresqlUsername }}
+      DB_PASS: {{ .Values.postgresql.postgresqlPassword }}
+      DB_HOST: {{ (include "postgresql.fullname" .) }}
+      DB_PORT: {{ .Values.postgresql.service.port }}
+    redis:
+      REDIS_HOST: {{ printf "%s-%s" (include "redis.fullname" .) "master" }}
+      REDIS_PORT: {{ .Values.redis.redisPort }}
+
+  alembic.ini: |
+    [alembic]
+    script_location = alembic
+
+    sqlalchemy.url = {{ printf "postgresql://%s:%s@%s:%s/%s" .Values.postgresql.postgresqlUsername .Values.postgresql.postgresqlPassword (include "postgresql.fullname" .) .Values.postgresql.service.port .Values.postgresql.postgresqlDatabase }}
+
+    [loggers]
+    keys = root,sqlalchemy,alembic
+
+    [handlers]
+    keys = console
+
+    [formatters]
+    keys = generic
+
+    [logger_root]
+    level = WARN
+    handlers = console
+    qualname =
+
+    [logger_sqlalchemy]
+    level = WARN
+    handlers =
+    qualname = sqlalchemy.engine
+
+    [logger_alembic]
+    level = INFO
+    handlers =
+    qualname = alembic
+
+    [handler_console]
+    class = StreamHandler
+    args = (sys.stderr,)
+    level = NOTSET
+    formatter = generic
+
+    [formatter_generic]
+    format = %(levelname)-5.5s [%(name)s] %(message)s
+    datefmt = %H:%M:%S
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: auth-database-secret-config
+type: Opaque
+data:
+  dbname: {{ .Values.postgresql.postgresqlDatabase | b64enc }}
+  username: {{ .Values.postgresql.postgresqlUsername | b64enc }}
+  password: {{ .Values.postgresql.postgresqlPassword | b64enc }}
