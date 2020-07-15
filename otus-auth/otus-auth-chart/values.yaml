@@ -6,7 +6,7 @@ replicaCount: 1
 
 fullnameOverride: "otus-auth"
 
-image: jawello/otus-auth:auth
+image: jawello/otus-auth:0.0.6
 
 service:
   type: NodePort
