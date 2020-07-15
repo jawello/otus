@@ -4,6 +4,8 @@
 
 replicaCount: 2
 
+fullnameOverride: "otus-app"
+
 image: jawello/otus:0.0.6
 
 service:

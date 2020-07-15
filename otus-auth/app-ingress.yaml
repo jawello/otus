@@ -13,5 +13,5 @@ spec:
       paths:
       - path: /users/
         backend:
-          serviceName: otus-app-chart
+          serviceName: otus-app
           servicePort: 8000

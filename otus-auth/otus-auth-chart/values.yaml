@@ -13,7 +13,7 @@ service:
   port: 9000
 
 appservice:
-  url: 'http://otus-app-chart:8000/users'
+  url: 'http://otus-app:8000/users'
 
 ingress:
   enabled: false
