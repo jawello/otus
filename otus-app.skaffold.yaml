@@ -9,7 +9,7 @@ build:
 deploy:
   helm:
     releases:
-      - name: otus-app-chart
+      - name: otus-app
         chartPath: otus-app/otus-app-chart
         artifactOverrides:
           image: otus-app

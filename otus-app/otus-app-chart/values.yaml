@@ -4,7 +4,9 @@
 
 replicaCount: 2
 
-image: jawello/otus:0.0.5
+fullnameOverride: "otus-app"
+
+image: jawello/otus:0.0.6
 
 service:
   type: NodePort

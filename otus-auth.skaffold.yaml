@@ -9,7 +9,7 @@ build:
 deploy:
   helm:
     releases:
-      - name: otus-auth-chart
+      - name: otus-auth
         chartPath: otus-auth/otus-auth-chart
         artifactOverrides:
           image: otus-auth
