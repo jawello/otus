@@ -13,7 +13,7 @@ from aiohttp.web import Request
 from aiohttp.web_response import Response
 from aiohttp.web_exceptions import HTTPConflict, HTTPCreated, HTTPBadRequest, HTTPAccepted, HTTPUnauthorized, \
     HTTPNoContent, HTTPInternalServerError, HTTPNotAcceptable, HTTPNotFound
-from aiohttp_security import remember, authorized_userid, forget, check_permission
+from aiohttp_security import remember, authorized_userid, forget
 from aiohttp_session.redis_storage import RedisStorage
 from aiohttp_security import SessionIdentityPolicy
 from aiohttp_security import setup as setup_security

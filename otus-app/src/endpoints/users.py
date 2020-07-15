@@ -7,7 +7,7 @@ from aiohttp import web
 from models import Users
 from models.schemas.users_schema import UsersSchema
 
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session
 
 import logging
 log = logging.getLogger(__name__)

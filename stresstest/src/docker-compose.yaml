@@ -3,7 +3,7 @@ services:
     locust:
         image: jawello/locust:0.0.5
         build:
-            context: .
+            context: ""
         environment:
             - "LOCUST_USERS=200"
             - "LOCUST_HATCH_RATE=10"

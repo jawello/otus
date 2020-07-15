@@ -5,7 +5,7 @@ metadata:
 build:
   artifacts:
   - image: jawello-locust-stresstest
-    context: stresstest-app
+    context: src
 deploy:
   helm:
     releases:

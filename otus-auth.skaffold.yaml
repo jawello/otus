@@ -4,14 +4,14 @@ metadata:
   name: otus-docker
 build:
   artifacts:
-  - image: jawello-otus-auth
-    context: src
+  - image: otus-auth
+    context: otus-auth/src
 deploy:
   helm:
     releases:
       - name: otus-auth-chart
-        chartPath: otus-auth-chart
+        chartPath: otus-auth/otus-auth-chart
         artifactOverrides:
-          image: jawello-otus-auth
+          image: otus-auth
         valuesFiles:
-          - otus-auth-chart/values.yaml
+          - otus-auth/otus-auth-chart/values.yaml
