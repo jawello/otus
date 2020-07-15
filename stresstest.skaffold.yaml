@@ -4,14 +4,14 @@ metadata:
   name: otus-docker
 build:
   artifacts:
-  - image: jawello-locust-stresstest
-    context: src
+  - image: locust-stresstest
+    context: stresstest/src
 deploy:
   helm:
     releases:
       - name: locust-chart
-        chartPath: stresstest-chart
+        chartPath: stresstest/stresstest-chart
         artifactOverrides:
-          image: jawello-locust-stresstest
+          image: locust-stresstest
         valuesFiles:
-          - stresstest-chart/values.yaml
+          - stresstest/stresstest-chart/values.yaml
