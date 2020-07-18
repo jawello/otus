@@ -1,6 +1,5 @@
 from typing import Callable, Awaitable
 
-import yaml
 import socket
 import json
 
@@ -15,9 +14,14 @@ import aioredis
 
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
+
+from db import construct_db_url, init_db
+from config import load_config
 
 from init_db.migration import alembic_set_stamp_head
+
+from routes import setup_routes
 
 import logging
 
@@ -55,48 +59,20 @@ async def setup_redis(app):
     return pool
 
 
-async def init_db(app):
-    dsn = construct_db_url(app['config']['database'])
-    pool = create_engine(dsn, pool_size=20, max_overflow=10)
-    app['db_session_manager'] = sessionmaker(bind=pool)
-    return pool
-
-
-def construct_db_url(config):
-    dsn = "postgresql://{user}:{password}@{host}:{port}/{database}"
-    return dsn.format(
-        user=config['DB_USER'],
-        password=config['DB_PASS'],
-        database=config['DB_NAME'],
-        host=config['DB_HOST'],
-        port=config['DB_PORT'],
-    )
-
-
 async def init_app(config) -> Application:
     app = web.Application(middlewares=[error_middleware])
     setup_metrics(app, "otus-product")
     app['config'] = config
     app.add_routes(routes)
+    setup_routes(app)
 
-    db_pool = await init_db(app)
-    db_pool = await init_db(app)
-    app['db_session_manager'] = db_pool
+    await init_db(app)
 
-    redis_pool = await setup_redis(app)
+    if 'redis' in app['config']:
+        await setup_redis(app)
 
     log.debug(app['config'])
     return app
-
-
-def load_config(config_file):
-    import os
-    print(os.getcwd())
-    with open(config_file, 'r') as stream:
-        try:
-            return yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
 
 
 @routes.get("/health")
