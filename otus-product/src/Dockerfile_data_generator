@@ -1,0 +1,23 @@
+FROM python:3.7-alpine
+MAINTAINER jawello, jawello@gmail.com
+
+RUN apk update \
+  && apk add --virtual build-deps autoconf automake g++ make build-deps gcc python3-dev musl-dev \
+  && apk add postgresql-dev
+
+COPY data_generator/requirements.txt .
+
+RUN pip install -r requirements.txt
+
+COPY ./data_generator /app
+COPY ./models /app/models
+COPY routes.py /app
+COPY db.py /app
+COPY config.py /app
+
+VOLUME ["/config/data_generator.yaml"]
+
+WORKDIR /app
+
+ENTRYPOINT ["python", "data_generator.py", "-c", "/config/data_generator.yaml"]
+
