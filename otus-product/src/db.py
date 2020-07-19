@@ -13,7 +13,7 @@ def construct_db_url(config):
     )
 
 
-async def init_db(app):
+def init_db(app):
     dsn = construct_db_url(app['config']['database'])
     pool = create_engine(dsn, pool_size=20, max_overflow=10)
     session_maker = sessionmaker(bind=pool)

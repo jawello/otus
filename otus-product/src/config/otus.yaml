@@ -7,6 +7,6 @@ database:
   DB_PASS: 'otus'
   DB_HOST: 'postgres-product'
   DB_PORT: 5432
-#redis:
-#  REDIS_HOST: 'redis-auth'
-#  REDIS_PORT: 6379
+redis:
+  host: 'redis-product'
+  port: 6379

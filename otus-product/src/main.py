@@ -10,13 +10,12 @@ from aiohttp.web import Application
 from aiohttp.web import Request
 from aiohttp.web_response import Response
 from aiohttp.web_exceptions import HTTPInternalServerError
-import aioredis
+from aiohttp_cache import (
+    setup_cache,
+    RedisConfig
+)
 
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-from db import construct_db_url, init_db
+from db import init_db
 from config import load_config
 
 from init_db.migration import alembic_set_stamp_head
@@ -44,32 +43,27 @@ async def error_middleware(request: web.Request, handler: Callable[[web.Request]
         return resp
 
 
-async def setup_redis(app):
-    pool = await aioredis.create_redis_pool((
-        app['config']['redis']['REDIS_HOST'],
-        app['config']['redis']['REDIS_PORT']
-    ))
-
-    async def close_redis(app):
-        pool.close()
-        await pool.wait_closed()
-
-    app.on_cleanup.append(close_redis)
-    app['redis_pool'] = pool
-    return pool
+def setup_redis(app: web.Application, config_redis: dict):
+    setup_cache(
+        app,
+        cache_type="redis",
+        backend_config=RedisConfig(host=config_redis.get('host', 'localhost'),
+                                   port=config_redis.get('port', 6379)
+                                   )
+    )
 
 
-async def init_app(config) -> Application:
+def init_app(config) -> Application:
     app = web.Application(middlewares=[error_middleware])
     setup_metrics(app, "otus-product")
     app['config'] = config
     app.add_routes(routes)
     setup_routes(app)
 
-    await init_db(app)
+    init_db(app)
 
     if 'redis' in app['config']:
-        await setup_redis(app)
+        setup_redis(app, config['redis'])
 
     log.debug(app['config'])
     return app

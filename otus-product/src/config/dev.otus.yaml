@@ -7,6 +7,6 @@ database:
   DB_PASS: 'otus'
   DB_HOST: 'localhost'
   DB_PORT: 5432
-#redis:
-#  REDIS_HOST: 'localhost'
-#  REDIS_PORT: 6379
+redis:
+    host: 'localhost'
+    port: 6380
