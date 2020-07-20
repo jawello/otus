@@ -1,12 +1,23 @@
 version: "3"
 services:
+  redis-overcommit:
+    build: https://github.com/bkuhl/redis-overcommit-on-host.git
+    restart: 'no'
+    privileged: true
+    volumes:
+      - /proc/sys/vm:/mnt/vm
   redis-product:
     image: redis:5-alpine
+    command: redis-server
     ports:
       - 6380:6379
+    volumes:
+      - $PWD/redis-conf/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - app
     restart: on-failure
+    depends_on:
+      - redis-overcommit
   postgres-product:
     image: postgres:latest
     ports:
@@ -16,29 +27,29 @@ services:
     environment:
       - POSTGRES_PASSWORD=otus
     restart: on-failure
-#  data_generator:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile_data_generator
-#    volumes:
-#      - ${PWD}/data_generator/config/data_generator.yaml:/config/data_generator.yaml
-#    networks:
-#      - app
-#    depends_on:
-#      - postgres-product
-#    entrypoint: ["python", "data_generator.py", "-c", "/config/data_generator.yaml"]
-#  otus_product:
-#    build:
-#      context: ""
-#    volumes:
-#      - ${PWD}/config:/app/config
-#    ports:
-#      - "9001:8080"
-#    networks:
-#      - app
-#    depends_on:
-#      - postgres-product
-#    restart: on-failure
-#    entrypoint: ["python", "main.py", "-c", "/app/config/otus.yaml", "-cm", "/app/config/alembic.ini"]
+  data_generator:
+    build:
+      context: .
+      dockerfile: Dockerfile_data_generator
+    volumes:
+      - ${PWD}/data_generator/config/data_generator.yaml:/config/data_generator.yaml
+    networks:
+      - app
+    depends_on:
+      - postgres-product
+    entrypoint: ["python", "data_generator.py", "-c", "/config/data_generator.yaml"]
+  otus_product:
+    build:
+      context: ""
+    volumes:
+      - ${PWD}/config:/app/config
+    ports:
+      - "9001:8080"
+    networks:
+      - app
+    depends_on:
+      - postgres-product
+    restart: on-failure
+    entrypoint: ["python", "main.py", "-c", "/app/config/otus.yaml", "-cm", "/app/config/alembic.ini"]
 networks:
   app:
