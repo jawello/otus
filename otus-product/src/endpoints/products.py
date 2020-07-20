@@ -86,7 +86,7 @@ async def products_search(request: Request) -> Response:
             conditions.append(Product.name.like(f"""%{product_name_contain}%"""))
         product_description_contain = request.query.get('description')
         if product_description_contain:
-            conditions.append(Product.name.like(f"""%{product_description_contain}%"""))
+            conditions.append(Product.description.like(f"""%{product_description_contain}%"""))
 
         if conditions:
             result = session.query(Product).filter(or_(*conditions)).all()
