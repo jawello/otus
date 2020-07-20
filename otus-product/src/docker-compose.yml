@@ -12,7 +12,7 @@ services:
     ports:
       - 6380:6379
     volumes:
-      - $PWD/redis-conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - $PWD/redis-config/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - app
     restart: on-failure
