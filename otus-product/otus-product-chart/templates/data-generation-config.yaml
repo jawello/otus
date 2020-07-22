@@ -1,0 +1,17 @@
+{{- if .Values.data_generation.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "otus-product-chart.fullname" . }}-data-generation-config
+data:
+  data_generator.yaml: |
+    app:
+      loglevel: {{ .Values.data_generation.loglevel | default "DEBUG" }}
+      products_count: {{ .Values.data_generation.products_count }}
+    database:
+      DB_NAME: {{ .Values.postgresql.postgresqlDatabase }}
+      DB_USER: {{ .Values.postgresql.postgresqlUsername }}
+      DB_PASS: {{ .Values.postgresql.postgresqlPassword }}
+      DB_HOST: {{ (include "postgresql.fullname" .) }}
+      DB_PORT: {{ .Values.postgresql.service.port }}
+{{- end }}

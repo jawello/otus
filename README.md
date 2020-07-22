@@ -221,7 +221,7 @@ kubectl apply -f otus-auth/auth-ingress.yaml
 newman run otus-auth/otus-app-auth.postman_collection.json
 ```
 ## Шестое домашнее задания
-**tag**: v0.0.6
+**tag**: v0.0.7
 
 Реализовать один из паттернов кэширования в приложении.
 Реализовать сервис "Продукты".

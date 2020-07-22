@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2beta4
+kind: Config
+metadata:
+  name: otus-product
+build:
+  artifacts:
+  - image: otus-product
+    context: otus-product/src
+  - image: otus-product-chart-data-generator
+    context: otus-product/src
+    docker:
+      dockerfile: Dockerfile_data_generator
+deploy:
+  helm:
+    releases:
+      - name: otus-product
+        chartPath: otus-product/otus-product-chart
+        artifactOverrides:
+          image: otus-product
+          data_generation.image: otus-product-chart-data-generator
+        valuesFiles:
+          - otus-product/otus-product-chart/values.yaml
