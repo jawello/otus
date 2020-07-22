@@ -111,6 +111,6 @@ jobs:
           DOCKERFILE: "otus-product/src/Dockerfile_data_generator"
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus-product-data-generator-app
+          IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/otus-product-data-generator
           TAG_NAME: ${{ steps.get_version.outputs.VERSION_OTUS_APP }}
           LATEST: "true"
