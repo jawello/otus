@@ -8,5 +8,5 @@ database:
   DB_HOST: 'localhost'
   DB_PORT: 5432
 redis:
-    host: 'localhost'
-    port: 6380
+  host: 'localhost'
+  port: 6380

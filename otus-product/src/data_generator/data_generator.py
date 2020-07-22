@@ -40,7 +40,8 @@ def main(config_path: str):
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    generate_products(session, config_app.get('products_count', 100))
+    products_count = int(float(config_app.get('products_count', 100)))
+    generate_products(session, products_count)
 
 
 if __name__ == '__main__':

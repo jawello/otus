@@ -43,6 +43,11 @@ async def products_id_get(request: Request) -> Response:
         if not product_id:
             return HTTPBadRequest()
 
+        try:
+            int(product_id)
+        except ValueError:
+            return HTTPBadRequest()
+
         product = session.query(Product).filter_by(id=product_id).first()
 
         if not product:

@@ -9,15 +9,17 @@ COPY data_generator/requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY ./data_generator /app
+RUN mkdir /app
+RUN mkdir /app/config
+
+COPY ./data_generator/data_generator.py /app
 COPY ./models /app/models
 COPY routes.py /app
 COPY db.py /app
 COPY config.py /app
 
-VOLUME ["/config/data_generator.yaml"]
-
 WORKDIR /app
+VOLUME ["/app/config"]
 
-ENTRYPOINT ["python", "data_generator.py", "-c", "/config/data_generator.yaml"]
+ENTRYPOINT ["python", "data_generator.py", "-c", "/app/config/data_generator.yaml"]
 
