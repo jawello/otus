@@ -6,11 +6,11 @@ replicaCount: 2
 
 fullnameOverride: "otus-product"
 
-image: jawello/otus-product:products_cache
+image: jawello/otus-product:0.0.7
 
 data_generation:
   enabled: true
-  image: jawello/otus-product-generation:products_cache
+  image: jawello/otus-product-data-generator:0.0.7
   products_count: 100000
   loglevel: WARNING
 
