@@ -1,0 +1,32 @@
+{{- if .Values.data_generation.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "otus-product-chart.fullname" . }}-data-generation
+spec:
+  template:
+    metadata:
+      name: {{ include "otus-product-chart.fullname" . }}-data-generation
+    spec:
+      initContainers:
+      - name: check-db-ready
+        image: postgres:11-alpine
+        command: ['sh', '-c',
+                  'until pg_isready -h {{ (include "postgresql.fullname" .) }} -p 5432;
+                    do echo waiting for database; sleep 2; done;']
+      restartPolicy: Never
+      containers:
+      - name: {{ .Chart.Name }}-data-generation
+        image: {{ .Values.data_generation.image }}
+        env:
+          - name: PYTHONUNBUFFERED
+            value: "0"
+        volumeMounts:
+          - name: {{ include "otus-product-chart.fullname" . }}-data-generation-config-volume
+            mountPath: /app/config
+      volumes:
+        - name: {{ include "otus-product-chart.fullname" . }}-data-generation-config-volume
+          configMap:
+            name: {{ include "otus-product-chart.fullname" . }}-data-generation-config
+  backoffLimit: 2
+{{- end }}

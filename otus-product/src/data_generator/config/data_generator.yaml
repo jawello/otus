@@ -1,0 +1,9 @@
+app:
+  loglevel: DEBUG
+  products_count: 1000
+database:
+  DB_NAME: 'postgres'
+  DB_USER: 'postgres'
+  DB_PASS: 'otus'
+  DB_HOST: 'postgres-product'
+  DB_PORT: 5432

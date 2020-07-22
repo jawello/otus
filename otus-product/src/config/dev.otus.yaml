@@ -1,0 +1,12 @@
+app:
+  loglevel: DEBUG
+  port: 9000
+database:
+  DB_NAME: 'postgres'
+  DB_USER: 'postgres'
+  DB_PASS: 'otus'
+  DB_HOST: 'localhost'
+  DB_PORT: 5432
+redis:
+  host: 'localhost'
+  port: 6380
