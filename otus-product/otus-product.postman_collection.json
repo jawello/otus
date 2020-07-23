@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "0c2cc036-6b56-4c77-8be3-40f3aeeadb88",
+		"name": "otus-product",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Product search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eeb6f098-f1d9-4034-859a-fdd5d7efa535",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Searching data for search string\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length>0).to.be.true;",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"if (jsonData.length>0)",
+							"{",
+							"    var search_str = pm.collectionVariables.get(\"search_str\");",
+							"    pm.test(\"Check all results contains search string\", function () {",
+							"        jsonData.forEach(function (i) {",
+							"            var str = i.name;",
+							"            if(!str.includes(search_str))",
+							"            {",
+							"                console.log(str);",
+							"                console.log(search_str);",
+							"            }",
+							"            pm.expect(str.includes(search_str)).to.be.true;",
+							"        });",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "куча",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "arch.homework/products_search?name={{search_str}}",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"products_search"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{search_str}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product search cached",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ecda5548-2746-4c3b-8674-53a9db5e054c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Searching data for search string\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length>0).to.be.true;",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"if (jsonData.length>0)",
+							"{",
+							"    var search_str = pm.collectionVariables.get(\"search_str\");",
+							"    pm.test(\"Check all results contains search_str\", function () {",
+							"        jsonData.forEach(function (i) {",
+							"            var str = i.name;",
+							"            pm.expect(str.includes(search_str)).to.be.true;",
+							"        });",
+							"    });",
+							"}",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "куча",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "arch.homework/products_search?name={{search_str}}",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"products_search"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{search_str}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "fc87426f-0ba1-4f4d-9dc2-53c656db1745",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "fe494f29-9754-4f26-8314-4735af633d95",
+				"type": "text/javascript",
+				"exec": [
+					"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true;"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "9308013d-b9bb-4557-b144-ee2b9a8e04af",
+			"key": "base_url",
+			"value": "arch.homework",
+			"type": "string"
+		},
+		{
+			"id": "8e90272a-c756-49d0-a218-5541d004afbe",
+			"key": "search_str",
+			"value": "космос",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
