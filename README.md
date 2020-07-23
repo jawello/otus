@@ -270,3 +270,5 @@ helm install otus-product otus-product/otus-product-chart
 ```bash
 newman run otus-product/otus-product.postman_collection.json
 ```
+Тесты могут не пройти, если в бд не будет продуктов, которые содержат 
+в имени слово "космос".
