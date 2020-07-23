@@ -268,5 +268,5 @@ helm install otus-product otus-product/otus-product-chart
 ```
 #### Команда для запуска теста
 ```bash
-newman run otus-product/otus-product-auth.postman_collection.json
+newman run otus-product/otus-product.postman_collection.json
 ```
