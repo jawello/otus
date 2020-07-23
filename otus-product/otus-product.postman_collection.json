@@ -17,18 +17,27 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"var search_str = pm.collectionVariables.get(\"search_str\");",
-							"",
-							"pm.test(\"Check all results contains search_str\", function () {",
+							"pm.test(\"Searching data for search string\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    if (jsonData.length === 0 )",
-							"        pm.expect(jsonData.length).to.be.true;",
-							"    ",
-							"    jsonData.forEach(function (i) {",
-							"        var str = i.name;",
-							"        pm.expect(str.includes(search_str)).to.be.true;",
+							"    pm.expect(jsonData.length>0).to.be.true;",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"if (jsonData.length>0)",
+							"{",
+							"    var search_str = pm.collectionVariables.get(\"search_str\");",
+							"    pm.test(\"Check all results contains search string\", function () {",
+							"        jsonData.forEach(function (i) {",
+							"            var str = i.name;",
+							"            if(!str.includes(search_str))",
+							"            {",
+							"                console.log(str);",
+							"                console.log(search_str);",
+							"            }",
+							"            pm.expect(str.includes(search_str)).to.be.true;",
+							"        });",
 							"    });",
-							"});"
+							"}"
 						],
 						"type": "text/javascript"
 					}
@@ -45,7 +54,7 @@
 					}
 				],
 				"url": {
-					"raw": "arch.homework/products_search?name=космос неожиданный ",
+					"raw": "arch.homework/products_search?name={{search_str}}",
 					"host": [
 						"arch",
 						"homework"
@@ -56,7 +65,7 @@
 					"query": [
 						{
 							"key": "name",
-							"value": "космос неожиданный "
+							"value": "{{search_str}}"
 						}
 					]
 				}
@@ -75,18 +84,22 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"var search_str = pm.collectionVariables.get(\"search_str\");",
-							"",
-							"pm.test(\"Check all results contains search_str\", function () {",
+							"pm.test(\"Searching data for search string\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    if (jsonData.length === 0 )",
-							"        pm.expect(jsonData.length).to.be.true;",
-							"    ",
-							"    jsonData.forEach(function (i) {",
-							"        var str = i.name;",
-							"        pm.expect(str.includes(search_str)).to.be.true;",
-							"    });",
+							"    pm.expect(jsonData.length>0).to.be.true;",
 							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"if (jsonData.length>0)",
+							"{",
+							"    var search_str = pm.collectionVariables.get(\"search_str\");",
+							"    pm.test(\"Check all results contains search_str\", function () {",
+							"        jsonData.forEach(function (i) {",
+							"            var str = i.name;",
+							"            pm.expect(str.includes(search_str)).to.be.true;",
+							"        });",
+							"    });",
+							"}",
 							"",
 							"pm.test(\"Response time is less than 200ms\", function () {",
 							"    pm.expect(pm.response.responseTime).to.be.below(200);",
@@ -107,7 +120,7 @@
 					}
 				],
 				"url": {
-					"raw": "arch.homework/products_search?name=космос неожиданный ",
+					"raw": "arch.homework/products_search?name={{search_str}}",
 					"host": [
 						"arch",
 						"homework"
@@ -118,7 +131,7 @@
 					"query": [
 						{
 							"key": "name",
-							"value": "космос неожиданный "
+							"value": "{{search_str}}"
 						}
 					]
 				}
@@ -143,15 +156,20 @@
 				"id": "fe494f29-9754-4f26-8314-4735af633d95",
 				"type": "text/javascript",
 				"exec": [
-					"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true;",
-					"tests[\"[INFO] Response: \" + responseBody] = true;"
+					"tests[\"[INFO] Request: \" + (('data' in request) ? request['data'] : '') ] = true;"
 				]
 			}
 		}
 	],
 	"variable": [
 		{
-			"id": "801b8b5a-4dad-459a-8eec-e4a25078f483",
+			"id": "9308013d-b9bb-4557-b144-ee2b9a8e04af",
+			"key": "base_url",
+			"value": "arch.homework",
+			"type": "string"
+		},
+		{
+			"id": "8e90272a-c756-49d0-a218-5541d004afbe",
 			"key": "search_str",
 			"value": "космос",
 			"type": "string"
