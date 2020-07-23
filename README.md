@@ -241,3 +241,34 @@ newman run otus-auth/otus-app-auth.postman_collection.json
 
 В тестах обязательно использование домена arch.homework в качестве 
 initial значения {{baseUrl}}
+### Дополнение
+Для кэширования использовался Redis и библиотека aiohttp-cache, 
+ключом кэширования является hash из method, host, path, postdata, ctype.
+Для инвалидации cache'а используется TTL в 60 секунд.
+В случае нехватки памяти вытеснение происходит по LFU (настроено в 
+Redis).
+#### Генерация данных
+Для возможности тестирования можно сгенерировать данные. Для этого 
+в [values.yaml](otus-product/otus-product-chart/values.yaml) нужно 
+прописать блок *data_generation* (уже прописан), пример:
+```yaml
+data_generation:
+  enabled: true
+  image: jawello/otus-product-data-generator:0.0.7
+  products_count: 100000 # кол-во генерируемых продуктов
+  loglevel: WARNING
+```
+#### Команда для запуска приложения
+```bash
+skaffold run -f otus-product.skaffold.yaml
+```
+или
+```bash
+helm install otus-product otus-product/otus-product-chart  
+```
+#### Команда для запуска теста
+```bash
+newman run otus-product/otus-product.postman_collection.json
+```
+Тесты могут не пройти, если в бд не будет продуктов, которые содержат 
+в имени слово "космос".
