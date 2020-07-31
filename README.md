@@ -416,6 +416,14 @@ port-forward service/prom-grafana 9000:80
 #### Grafana credentials
 user: admin
 pas: prom-operator
+#### Команда для запуска приложения
+```bash
+skaffold run -f otus-product.skaffold.yaml
+```
+или
+```bash
+helm install otus-product otus-product/otus-product-chart  
+```
 #### Команда для запуска нагрузочного тестирования
 ```bash
 locust -f loadtest-product/src/app/locust-tasks/tasks.py --host=http://arch.homework --headless -u 1000 -r 5 -t 10m  
