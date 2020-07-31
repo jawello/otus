@@ -11,7 +11,7 @@ image: jawello/otus-product:0.0.7
 data_generation:
   enabled: true
   image: jawello/otus-product-data-generator:0.0.7
-  products_count: 100000
+  products_count: 1000000
   loglevel: WARNING
 
 service:
@@ -29,9 +29,9 @@ ingress:
         - /products_search
 
 metrics:
-  enabled: false
+  enabled: true
   serviceMonitor:
-    enabled: false
+    enabled: true
 
 postgresql:
   enabled: true
@@ -40,6 +40,19 @@ postgresql:
   postgresqlDatabase: postgres
   service:
     port: "5432"
+  metrics:
+    enabled: true
+    service:
+      type: NodePort
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {}
+      namespace: monitoring
+      interval: 30s
+      scrapeTimeout: 10s
 
 redis:
   enabled: true
@@ -47,3 +60,16 @@ redis:
   redisPort: "6379"
   cluster:
     enabled: false
+  metrics:
+    enabled: true
+    service:
+      type: NodePort
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {}
+      namespace: monitoring
+      interval: 30s
+      scrapeTimeout: 10s
