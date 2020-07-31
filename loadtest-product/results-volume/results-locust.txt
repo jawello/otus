@@ -1,0 +1,23 @@
+ Name                                                          # reqs      # fails     Avg     Min     Max  |  Median   req/s failures/s
+--------------------------------------------------------------------------------------------------------------------------------------------
+ GET /product_search                                            46769 46529(99.49%)    2764       0   37656  |       3   77.98   77.58
+ GET /product_search/specific                                    1982 1902(95.96%)    5781       0   32683  |       3    3.30    3.17
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregated                                                     48751 48431(99.34%)    2887       0   37656  |       3   81.29   80.75
+
+Percentage of the requests completed within given times
+ Type                 Name                                                           # reqs    50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100%
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ GET                  /product_search                                                 46769      3      4      5      7  13000  17000  25000  29000  32000  33000  38000
+ GET                  /product_search/specific                                         1982      3   1200  12000  15000  21000  26000  30000  32000  33000  33000  33000
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ None                 Aggregated                                                      48751      3      4      5      8  14000  17000  26000  29000  32000  33000  38000
+
+Error report
+ # occurrences      Error
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 579                GET /product_search/specific: "HTTPError('500 Server Error: Internal Server Error for url: /product_search/specific')"
+ 46529              GET /product_search: "CatchResponseError('Got wrong response')"
+ 1302               GET /product_search/specific: "HTTPError('503 Server Error: Service Temporarily Unavailable for url: /product_search/specific')"
+ 21                 GET /product_search/specific: "HTTPError('502 Server Error: Bad Gateway for url: /product_search/specific')"
+--------------------------------------------------------------------------------------------------------------------------------------------
