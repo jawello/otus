@@ -359,7 +359,7 @@ Locust и т.д.).
 ![DB](loadtest-product/results-cache/redis.png)
 
 ##### Locust results
-[locust-results](loadtest-product/results-cache/locust-results.txt)
+[locust-results](loadtest-product/results-cache/locust-result.txt)
 
 ##### Выводы
 Кэширование позволило сервисам справится с нагрузкой и сильно снизить 
@@ -376,7 +376,7 @@ Locust и т.д.).
 ![DB](loadtest-product/results-volume/redis.png)
 
 ##### Locust results
-[locust-results](loadtest-product/results-volume/locust-results.txt)
+[locust-results](loadtest-product/results-volume/locust-result.txt)
 
 ##### Выводы
 Сервис не справился с той же нагрузкой, с которой справлялся при 
