@@ -5,7 +5,7 @@ RUN apk update \
   && apk add --virtual build-deps autoconf automake g++ gcc make python3-dev musl-dev \
   && apk add postgresql-dev
 RUN pip install --user -r requirements.txt
-RUN pip install --install-option="--prefix=/install" -r /requirements.txt
+RUN pip install --prefix=/install -r /requirements.txt
 RUN pip install py-bcrypt --user
 
 FROM python:3.7-alpine as builder_multidict
